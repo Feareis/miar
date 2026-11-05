@@ -12,7 +12,7 @@ export default function Attente({ lignes }: { lignes: readonly string[] }) {
 
   return (
     <section className="attente feuille" aria-busy="true">
-      <p className="visuellement-masque" role="status">Your AI is analysing your request…</p>
+      <p className="visuellement-masque" role="status">Your AI is analysing your request, with great patience…</p>
       <ol className="journal" aria-hidden="true">
         {lignes.slice(0, visibles).map((ligne, i) => (
           <li key={i} className={i === visibles - 1 ? 'journal__ligne journal__ligne--courante' : 'journal__ligne'}>{ligne}</li>

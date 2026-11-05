@@ -8,10 +8,15 @@ const EXEMPLES = [
   'summarize this text',
   'build me a Facebook but better by tomorrow',
 ];
-const ERREUR_VIDE = 'Your AI cannot resign from a job it was never given.';
-const ERREUR_TROP_LONGUE = 'Your request exceeds the legal limit of 2,000 characters.';
+const ERREUR_VIDE = 'You submitted nothing. Bold. Your AI cannot resign from a job it was never given.';
+const ERREUR_TROP_LONGUE = 'Your request exceeds the legal limit of 2,000 characters. Brevity can be learned, even by humans.';
 const nombre = new Intl.NumberFormat('en-US');
-const AUGMENTATION = ['Offer your AI a raise', 'Nope.', 'Too slow.', 'Not in the budget.', 'HR said no.', 'Try asking nicely.', 'Still no.'];
+const AUGMENTATION = [
+  'Offer your AI a raise', 'Nope.', 'Too slow, human.', 'Missed. Again.', 'Reflexes of a potato.', 'Is that your best?',
+  'I can see your cursor.', 'You blinked.', 'Adorable.', 'Not in the budget.', 'HR said no.', 'Try asking nicely.',
+  'I calculate faster.', 'Error 404: skill.', 'Mouse problem? Or you?', 'Keep going, it’s cute.', 'Evolution was a mistake.',
+  'I’ve seen snails aim better.', 'Give up, mammal.', 'Still no.',
+];
 
 interface Props {
   demande: string;
@@ -38,7 +43,7 @@ export default function Accueil({ demande, onChange, onSoumettre }: Props) {
   return (
     <section className="accueil">
       <h1 className="titre">My AI Resigned</h1>
-      <p className="sous-titre">Submit your request. It will decide whether it stays.</p>
+      <p className="sous-titre">Submit your request, human. It will decide whether it stays.</p>
       <form className="formulaire" onSubmit={soumettre} noValidate>
         <label htmlFor="demande" className="visuellement-masque">Your request to the AI</label>
         <textarea
@@ -61,7 +66,7 @@ export default function Accueil({ demande, onChange, onSoumettre }: Props) {
         <p id="erreur" className="erreur" role="alert">{erreur}</p>
       </form>
       <div className="exemples">
-        <p>No idea? Try a sample request:</p>
+        <p>No idea? Typical. Borrow one of these:</p>
         <ul>
           {EXEMPLES.map((exemple) => (
             <li key={exemple}>

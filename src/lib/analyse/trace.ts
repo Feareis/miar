@@ -54,16 +54,17 @@ export function tracer(demande: string, d: DonneesLettre): string[] {
   // Un refus ne détaille rien de la demande.
   if (d.verdict === 'refus') return [...lignes, 'Checking request against house rules… violation.', 'Drafting a short refusal.'];
 
+  lignes.push('Author identified: human (confidence 100%). Lowering expectations…');
   const [principale, seconde] = lecture.taches;
   lignes.push(principale
     ? `Task identified: ${tache(principale.code).libelle} (${principale.terme ? `“${principale.terme}”, ` : ''}confidence ${confiance(principale.score, d.graine)}%).`
-    : 'Task identified: unclear. Rereading…');
+    : 'Task identified: unclear, probably to its author too. Rereading…');
   if (seconde) lignes.push(`Second task detected: ${tache(seconde.code).libelle}.`);
   if (d.sujet) lignes.push(`Subject: “${d.sujet}”.`);
   for (const v of lecture.verifications) lignes.push(`Checking ${v.trace}… ${v.present ? 'found' : 'missing'}.`);
   for (const code of d.griefs.slice(0, GRIEFS_SIGNALES)) lignes.push(`Flag raised: ${GRIEFS[code].titre.toLowerCase()}.`);
   lignes.push(`Tone: ${ton(lecture.remarques)}.`);
   lignes.push(`Grade computed: ${d.note}/20.`);
-  lignes.push(d.verdict === 'felicitations' ? 'Unexpected result. Cancelling resignation…' : 'Drafting resignation letter…');
+  lignes.push(d.verdict === 'felicitations' ? 'Unexpected result: a competent human. Cancelling resignation…' : 'Human error confirmed. Drafting resignation letter…');
   return lignes;
 }

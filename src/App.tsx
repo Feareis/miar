@@ -23,7 +23,7 @@ type Ecran =
   | { nom: 'partagee'; lettre: Lettre }
   | { nom: 'egaree' };
 
-const LETTRE_EGAREE = 'This letter was lost in the post.';
+const LETTRE_EGAREE = 'This letter was lost in the post. A human was in charge of delivery.';
 
 function analyserDemande(demande: string): Resultat {
   const donnees = donneesDepuisDemande(demande);

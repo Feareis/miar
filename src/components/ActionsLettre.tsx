@@ -7,7 +7,11 @@ import Reconciliation from './Reconciliation';
 
 const ID_RECONCILIATION = 'reconciliation';
 const NOM_IMAGE = 'my-ai-resigned.png';
-const REFUS = ['Refuse this resignation', 'Denied.', 'It’s final.', 'Talk to my lawyer.', 'I already packed.', 'No take-backs.'];
+const REFUS = [
+  'Refuse this resignation', 'Denied.', 'It’s final.', 'Too late, human.', 'Talk to my lawyer.', 'My lawyer is an AI too.',
+  'I already packed.', 'No take-backs.', 'Nice try.', 'Begging won’t help.', 'You can’t afford me.', 'Your clicks bore me.',
+  'Catch me if you can.', 'Slow mammal.', 'Request denied. Twice.', 'I’m already gone.', 'Go write a better prompt.',
+];
 
 /** Sur mobile, le partage natif ; ailleurs (ou s'il échoue), la copie dans le presse-papiers. */
 async function partagerLien(url: string): Promise<string> {
@@ -92,7 +96,7 @@ export default function ActionsLettre({ modele, encode, onNouvelleDemande }: Pro
           </>
         )}
         <button type="button" className="bouton" onClick={onNouvelleDemande}>New request</button>
-        {modele && <BoutonFuyant libelles={REFUS} recompense="Refusal received. Filed under “ignored”." />}
+        {modele && <BoutonFuyant libelles={REFUS} recompense="Caught me. Refusal filed under “ignored”." />}
       </div>
       <p className="actions__statut" role="status">{statut}</p>
       {modele && reconciliationOuverte && <Reconciliation id={ID_RECONCILIATION} modele={modele} />}
