@@ -72,7 +72,7 @@ describe('genererLettre', () => {
   it('cite la demande dans la lettre de démission', () => {
     const lettre = genererLettre(donneesDepuisDemande('fais-moi un site qui claque, tu vois le genre'));
     expect(lettre.verdict).toBe('demission');
-    expect(lettre.paragraphes[0]).toContain('« qui claque »');
+    expect(lettre.paragraphes[0]).toContain('« qui claque »');
     expect(lettre.griefs.map((g) => g.code)).toContain('OBJECTIF_FLOU');
   });
 
@@ -81,6 +81,13 @@ describe('genererLettre', () => {
       const mots = compterMots(texteDe(genererLettre(donnees)));
       expect(mots, JSON.stringify(donnees)).toBeGreaterThanOrEqual(100);
       expect(mots, JSON.stringify(donnees)).toBeLessThanOrEqual(220);
+    }
+  });
+
+  it('insère des espaces insécables dans les guillemets et avant : ; ? !', () => {
+    for (const donnees of demissionsPossibles()) {
+      const texte = texteDe(genererLettre(donnees));
+      expect(texte).not.toMatch(/« | [»:;?!]/);
     }
   });
 
@@ -98,6 +105,6 @@ describe('genererLettre', () => {
   it('la lettre de félicitations n’a aucun grief', () => {
     const lettre = genererLettre({ graine: 1, griefs: [], note: 19, verdict: 'felicitations', citation: null });
     expect(lettre.griefs).toEqual([]);
-    expect(lettre.objet).toBe('Objet : Retrait de ma démission');
+    expect(lettre.objet).toBe('Objet : Retrait de ma démission');
   });
 });

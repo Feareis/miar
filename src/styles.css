@@ -1,0 +1,390 @@
+:root {
+  --fond: #ede8df;
+  --papier: #fbf8f1;
+  --encre: #2b2722;
+  --encre-douce: #5c554c;
+  --filet: #d9d2c5;
+  --rouge: #b91c1c;
+  --vert: #15803d;
+  --gris: #4b5563;
+  --bleu: #1f3a8a;
+  --serif: 'EB Garamond', Garamond, Georgia, serif;
+  --machine: 'Courier Prime', 'Courier New', monospace;
+  --main: 'Caveat', cursive;
+  --interface: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--encre);
+  font-family: var(--interface);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+}
+
+.visuellement-masque {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bleu);
+  outline-offset: 2px;
+}
+
+/* ---------- Accueil ---------- */
+
+.titre {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 9vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.sous-titre {
+  margin: 12px 0 28px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--encre-douce);
+}
+
+.champ {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--filet);
+  border-radius: 6px;
+  background: var(--papier);
+  color: var(--encre);
+  font: 1.0625rem/1.5 var(--interface);
+  resize: vertical;
+}
+
+.champ::placeholder {
+  color: #8a8276;
+}
+
+.champ[aria-invalid='true'] {
+  border-color: var(--rouge);
+}
+
+.formulaire__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.compteur {
+  font-size: 0.875rem;
+  color: var(--encre-douce);
+  font-variant-numeric: tabular-nums;
+}
+
+.compteur--depasse {
+  color: var(--rouge);
+  font-weight: 600;
+}
+
+.erreur {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  color: var(--rouge);
+}
+
+.exemples {
+  margin-top: 20px;
+  font-size: 0.9375rem;
+  color: var(--encre-douce);
+}
+
+.exemples p {
+  margin: 0 0 6px;
+}
+
+.exemples ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exemple {
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--encre);
+  font: italic 1.0625rem var(--serif);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--filet);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.exemple:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ---------- Boutons ---------- */
+
+.bouton {
+  padding: 11px 18px;
+  border: 1px solid var(--encre);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--encre);
+  font: 600 0.9375rem var(--interface);
+  cursor: pointer;
+}
+
+.bouton:hover {
+  background: rgb(43 39 34 / 0.06);
+}
+
+.bouton--principal {
+  background: var(--encre);
+  color: var(--papier);
+}
+
+.bouton--principal:hover {
+  background: #45403a;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+/* ---------- Feuille de papier ---------- */
+
+.feuille {
+  background: var(--papier);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 2px rgb(60 45 30 / 0.12),
+    0 18px 40px -12px rgb(60 45 30 / 0.28);
+  transform: rotate(0.4deg);
+}
+
+.attente {
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+  padding: 32px;
+}
+
+.attente__message {
+  margin: 0;
+  font-family: var(--machine);
+  font-size: 1.0625rem;
+}
+
+.attente__message::after {
+  content: '▌';
+  margin-left: 2px;
+  animation: curseur 1s steps(1) infinite;
+}
+
+@keyframes curseur {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Lettre ---------- */
+
+.lettre {
+  padding: 32px 24px 28px;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.lettre:focus {
+  outline: none;
+}
+
+.lettre:focus-visible {
+  outline: 3px solid var(--bleu);
+}
+
+.lettre__entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lettre__lieu {
+  flex: 1;
+  margin: 4px 0 0;
+  font-family: var(--machine);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-align: right;
+  color: var(--encre-douce);
+}
+
+.lettre__objet {
+  margin: 28px 0 20px;
+  font-family: var(--machine);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.lettre__corps p {
+  margin: 0 0 0.9em;
+  hyphens: auto;
+}
+
+.note {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 72px;
+  margin: -8px 0 0 -6px;
+  color: var(--rouge);
+  transform: rotate(-4deg);
+}
+
+.note__chiffre {
+  font-family: var(--main);
+  font-weight: 600;
+  font-size: 2.75rem;
+  line-height: 1;
+}
+
+.note__sur {
+  font-size: 1.5rem;
+}
+
+.note__cercle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.lettre__pied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.signature {
+  margin: 0;
+  font-family: var(--main);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  color: var(--bleu);
+  text-align: right;
+}
+
+.tampon {
+  --couleur-tampon: var(--rouge);
+  flex: none;
+  margin: 0;
+  padding: 6px 14px;
+  border: 3px double var(--couleur-tampon);
+  border-radius: 10px;
+  color: var(--couleur-tampon);
+  font: 700 1.25rem/1.2 var(--machine);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+  transform: rotate(-8deg);
+  mix-blend-mode: multiply;
+  animation: coup-de-tampon 260ms cubic-bezier(0.3, 1.4, 0.5, 1) 450ms both;
+}
+
+.lettre--felicitations .tampon {
+  --couleur-tampon: var(--vert);
+}
+
+.lettre--refus .tampon {
+  --couleur-tampon: var(--gris);
+}
+
+@keyframes coup-de-tampon {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(1.8);
+  }
+  to {
+    opacity: 0.85;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+.annexe {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--filet);
+  font-family: var(--machine);
+  font-size: 0.875rem;
+}
+
+.annexe h2 {
+  margin: 0 0 6px;
+  font-size: inherit;
+}
+
+.annexe ul {
+  margin: 0;
+  padding-left: 1.4em;
+  list-style: '– ';
+}
+
+@media (min-width: 640px) {
+  .page {
+    padding-top: 72px;
+  }
+
+  .lettre {
+    padding: 56px 64px 44px;
+  }
+
+  .tampon {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tampon,
+  .attente__message::after {
+    animation: none;
+  }
+}
