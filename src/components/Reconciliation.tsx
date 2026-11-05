@@ -16,7 +16,8 @@ export default function Reconciliation({ id, modele }: { id: string; modele: str
   return (
     <section id={id} className="reconciliation" aria-labelledby={`${id}-titre`}>
       <h2 id={`${id}-titre`} className="reconciliation__titre">Your request, with what it is missing</h2>
-      <pre className="reconciliation__modele">{modele}</pre>
+      {/* Focusable : sur PC le modèle défile dans son cadre, il doit rester lisible au clavier. */}
+      <pre className="reconciliation__modele" tabIndex={0}>{modele}</pre>
       <div className="reconciliation__pied">
         <button type="button" className="bouton bouton--principal" onClick={copier}>Copy</button>
         <p className="reconciliation__statut" role="status">{statut}</p>

@@ -270,6 +270,17 @@ body {
 /* ---------- Lettre ---------- */
 
 .lettre {
+  /* Tailles internes en em : sur PC, la lettre entière suit la hauteur de la fenêtre. */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'note lieu'
+    'objet objet'
+    'corps corps'
+    'pied pied'
+    'annexe annexe'
+    'adresse adresse';
+  column-gap: 16px;
   padding: 32px 24px 28px;
   font-family: var(--serif);
   font-size: 18px;
@@ -282,28 +293,26 @@ body {
   outline: none;
 }
 
-.lettre__entete {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 .lettre__lieu {
-  flex: 1;
-  margin: 4px 0 0;
+  grid-area: lieu;
+  margin: 0.2em 0 0;
   font-family: var(--machine);
-  font-size: 0.8125rem;
+  font-size: 0.72em;
   line-height: 1.5;
   text-align: right;
   color: var(--encre-douce);
 }
 
 .lettre__objet {
-  margin: 28px 0 20px;
+  grid-area: objet;
+  margin: 1.55em 0 1.1em;
   font-family: var(--machine);
-  font-size: 0.9375rem;
+  font-size: 0.84em;
   font-weight: 700;
+}
+
+.lettre__corps {
+  grid-area: corps;
 }
 
 .lettre__corps p {
@@ -316,9 +325,10 @@ body {
   flex: none;
   display: grid;
   place-items: center;
-  width: 104px;
-  height: 72px;
-  margin: -8px 0 0 -6px;
+  grid-area: note;
+  width: 5.8em;
+  height: 4em;
+  margin: -0.45em 0 0 -0.35em;
   color: var(--rouge);
   transform: rotate(-4deg);
 }
@@ -326,12 +336,12 @@ body {
 .note__chiffre {
   font-family: var(--main);
   font-weight: 600;
-  font-size: 2.75rem;
+  font-size: 2.45em;
   line-height: 1;
 }
 
 .note__sur {
-  font-size: 1.5rem;
+  font-size: 0.55em;
 }
 
 .note__cercle {
@@ -346,18 +356,19 @@ body {
 }
 
 .lettre__pied {
+  grid-area: pied;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 20px;
+  margin-top: 1.1em;
 }
 
 .signature {
   margin: 0;
   font-family: var(--main);
   font-weight: 600;
-  font-size: 1.75rem;
+  font-size: 1.55em;
   line-height: 1.1;
   color: var(--bleu);
   text-align: right;
@@ -371,7 +382,7 @@ body {
   border: 3px double var(--couleur-tampon);
   border-radius: 10px;
   color: var(--couleur-tampon);
-  font: 700 1.25rem/1.2 var(--machine);
+  font: 700 1.1em/1.2 var(--machine);
   letter-spacing: 0.08em;
   opacity: 0.85;
   transform: rotate(-8deg);
@@ -399,11 +410,12 @@ body {
 }
 
 .annexe {
-  margin-top: 28px;
-  padding-top: 16px;
+  grid-area: annexe;
+  margin-top: 2em;
+  padding-top: 1.15em;
   border-top: 1px solid var(--filet);
   font-family: var(--machine);
-  font-size: 0.875rem;
+  font-size: 0.78em;
 }
 
 .annexe h2 {
@@ -419,9 +431,10 @@ body {
 
 /* Le lien ramène au site : discret, mais lisible sur l'image exportée. */
 .lettre__adresse {
-  margin: 24px 0 0;
+  grid-area: adresse;
+  margin: 2em 0 0;
   font-family: var(--machine);
-  font-size: 0.75rem;
+  font-size: 0.67em;
   color: var(--encre-douce);
   text-align: center;
 }
@@ -487,11 +500,142 @@ body {
   }
 
   .lettre {
-    padding: 56px 64px 44px;
+    padding: 3.1em 3.55em 2.45em;
   }
 
   .tampon {
-    font-size: 1.5rem;
+    font-size: 1.33em;
+  }
+}
+
+/* PC : tout l'écran tient sans défiler. La lettre passe en paysage, note et griefs dans
+   la marge, et sa typographie suit la hauteur de la fenêtre ; les actions vont à droite. */
+@media (min-width: 1200px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1280px;
+    min-height: 100dvh;
+    padding: 3vh 32px;
+  }
+
+  .page > :not(.bureau) {
+    width: 100%;
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  .bureau {
+    display: grid;
+    grid-template-columns: auto 300px;
+    justify-content: center;
+    align-items: start;
+    gap: 36px;
+  }
+
+  .lettre {
+    --marge: 10em;
+    --bord: 2.6em;
+    --gouttiere: 2.4em;
+    grid-template-columns: var(--marge) 34em;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'note lieu'
+      'note objet'
+      'annexe corps'
+      'adresse pied';
+    column-gap: var(--gouttiere);
+    padding: 2em var(--bord) 1.6em;
+    /* ~33em de haut et ~52em de large : la lettre la plus longue remplit ~85 % de la fenêtre. */
+    font-size: clamp(14px, min(2.5vh, (100vw - 400px) / 52), 20px);
+    line-height: 1.45;
+    /* Filet de marge, comme sur une copie : il sépare les annotations de la lettre. */
+    background-image: linear-gradient(
+      to right,
+      transparent calc(var(--bord) + var(--marge) + var(--gouttiere) / 2 - 1px),
+      rgb(185 28 28 / 0.3) 0 calc(var(--bord) + var(--marge) + var(--gouttiere) / 2),
+      transparent 0
+    );
+  }
+
+  .note {
+    margin: 0;
+  }
+
+  .lettre__lieu {
+    margin: 0;
+  }
+
+  .lettre__objet {
+    margin: 0.9em 0 1em;
+  }
+
+  .lettre__corps p {
+    margin-bottom: 0.55em;
+  }
+
+  .lettre__pied {
+    margin-top: 0.3em;
+  }
+
+  .annexe {
+    align-self: start;
+    margin-top: 0.4em;
+    padding-top: 0;
+    border-top: 0;
+    font-size: 0.72em;
+    line-height: 1.4;
+  }
+
+  .annexe ul {
+    padding-left: 1.1em;
+  }
+
+  .annexe li + li {
+    margin-top: 0.35em;
+  }
+
+  .lettre__adresse {
+    align-self: end;
+    margin: 0;
+    text-align: left;
+  }
+
+  /* Le volet suit la hauteur de l'écran ; seul le modèle de réconciliation défile. */
+  .volet {
+    display: flex;
+    flex-direction: column;
+    max-height: 94dvh;
+  }
+
+  .volet .actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0;
+  }
+
+  .volet .bouton {
+    text-align: left;
+  }
+
+  .reconciliation {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin-top: 8px;
+    padding: 16px;
+  }
+
+  .reconciliation__titre {
+    font-size: 1.125rem;
+  }
+
+  .reconciliation__modele {
+    min-height: 0;
+    overflow-y: auto;
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 }
 

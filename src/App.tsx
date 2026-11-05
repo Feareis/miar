@@ -64,8 +64,10 @@ export default function App() {
   }
 
   const boutonCommencer = (
-    <div className="actions">
-      <button type="button" className="bouton bouton--principal" onClick={commencer}>Make my AI resign too</button>
+    <div className="volet">
+      <div className="actions">
+        <button type="button" className="bouton bouton--principal" onClick={commencer}>Make my AI resign too</button>
+      </div>
     </div>
   );
 
@@ -80,16 +82,16 @@ export default function App() {
       )}
       {ecran.nom === 'attente' && <Attente />}
       {ecran.nom === 'lettre' && (
-        <>
+        <div className="bureau">
           <LettreAdministrative lettre={ecran.lettre} />
           <ActionsLettre modele={ecran.modele} encode={ecran.encode} onNouvelleDemande={() => setEcran({ nom: 'accueil' })} />
-        </>
+        </div>
       )}
       {ecran.nom === 'partagee' && (
-        <>
+        <div className="bureau">
           <LettreAdministrative lettre={ecran.lettre} />
           {boutonCommencer}
-        </>
+        </div>
       )}
       {ecran.nom === 'egaree' && (
         <>

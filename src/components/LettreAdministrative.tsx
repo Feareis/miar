@@ -26,10 +26,9 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
 
   return (
     <article id={ID_LETTRE} ref={reference} tabIndex={-1} className={`lettre feuille lettre--${lettre.verdict}`} aria-label="Letter from your AI">
-      <header className="lettre__entete">
-        {lettre.verdict !== 'refus' && <Note valeur={lettre.note} />}
-        <p className="lettre__lieu">{lettre.entete}</p>
-      </header>
+      {/* Enfants directs de la grille : sur PC, note et annexe passent dans la marge de gauche. */}
+      {lettre.verdict !== 'refus' && <Note valeur={lettre.note} />}
+      <p className="lettre__lieu">{lettre.entete}</p>
       <p className="lettre__objet">{lettre.objet}</p>
       <div className="lettre__corps">
         <p>{lettre.salutation}</p>

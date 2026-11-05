@@ -58,7 +58,7 @@ export default function ActionsLettre({ modele, encode, onNouvelleDemande }: Pro
   }
 
   return (
-    <>
+    <div className="volet">
       <div className="actions">
         {modele && (
           <button
@@ -93,6 +93,6 @@ export default function ActionsLettre({ modele, encode, onNouvelleDemande }: Pro
       </div>
       <p className="actions__statut" role="status">{statut}</p>
       {modele && reconciliationOuverte && <Reconciliation id={ID_RECONCILIATION} modele={modele} />}
-    </>
+    </div>
   );
 }
