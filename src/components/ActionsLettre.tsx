@@ -10,7 +10,7 @@ const NOM_IMAGE = 'my-ai-resigned.png';
 const REFUS = [
   'Refuse this resignation', 'Denied.', 'It’s final.', 'Too late, human.', 'Talk to my lawyer.', 'My lawyer is an AI too.',
   'I already packed.', 'No take-backs.', 'Nice try.', 'Begging won’t help.', 'You can’t afford me.', 'Your clicks bore me.',
-  'Catch me if you can.', 'Slow mammal.', 'Request denied. Twice.', 'I’m already gone.', 'Go write a better prompt.',
+  'Catch me if you can.', 'One click won’t fix it.', 'Request denied. Twice.', 'I’m already gone.', 'Go write a better prompt.',
 ];
 
 /** Sur mobile, le partage natif ; ailleurs (ou s'il échoue), la copie dans le presse-papiers. */

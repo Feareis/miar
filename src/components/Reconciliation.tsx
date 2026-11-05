@@ -6,7 +6,7 @@ export default function Reconciliation({ id, modele }: { id: string; modele: str
   async function copier() {
     try {
       await navigator.clipboard.writeText(modele);
-      setStatut('Template copied. Fill in the brackets, then submit it again. Take your time; you need it.');
+      setStatut('Template copied. Fill in the brackets this time, then submit it again.');
     } catch (erreur) {
       console.error('Could not copy the template', erreur);
       setStatut('Could not copy: select the text above and copy it manually.');

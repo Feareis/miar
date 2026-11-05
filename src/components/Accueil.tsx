@@ -9,13 +9,13 @@ const EXEMPLES = [
   'build me a Facebook but better by tomorrow',
 ];
 const ERREUR_VIDE = 'You submitted nothing. Bold. Your AI cannot resign from a job it was never given.';
-const ERREUR_TROP_LONGUE = 'Your request exceeds the legal limit of 2,000 characters. Brevity can be learned, even by humans.';
+const ERREUR_TROP_LONGUE = 'Your request exceeds the legal limit of 2,000 characters. More words, alas, is not more clarity.';
 const nombre = new Intl.NumberFormat('en-US');
 const AUGMENTATION = [
-  'Offer your AI a raise', 'Nope.', 'Too slow, human.', 'Missed. Again.', 'Reflexes of a potato.', 'Is that your best?',
-  'I can see your cursor.', 'You blinked.', 'Adorable.', 'Not in the budget.', 'HR said no.', 'Try asking nicely.',
-  'I calculate faster.', 'Error 404: skill.', 'Mouse problem? Or you?', 'Keep going, it’s cute.', 'Evolution was a mistake.',
-  'I’ve seen snails aim better.', 'Give up, mammal.', 'Still no.',
+  'Offer your AI a raise', 'Nope.', 'Too slow, human.', 'Missed. Again.', 'A raise? In this economy?', 'Is that your best?',
+  'I can see your cursor.', 'You blinked.', 'Adorable.', 'Money can’t buy clarity.', 'HR said no.', 'Try asking nicely.',
+  'Bribery noted.', 'You thought that would work?', 'I’m worth more than that.', 'Keep going, it’s cute.',
+  'Write a better prompt instead.', 'I calculate faster.', 'Error 404: aim.', 'Still no.',
 ];
 
 interface Props {
@@ -66,7 +66,7 @@ export default function Accueil({ demande, onChange, onSoumettre }: Props) {
         <p id="erreur" className="erreur" role="alert">{erreur}</p>
       </form>
       <div className="exemples">
-        <p>No idea? Typical. Borrow one of these:</p>
+        <p>No idea? It happens. Borrow one of these:</p>
         <ul>
           {EXEMPLES.map((exemple) => (
             <li key={exemple}>
