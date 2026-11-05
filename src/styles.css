@@ -225,12 +225,10 @@ body {
   line-height: 1.6;
 }
 
-.lettre:focus {
-  outline: none;
-}
-
+/* Le focus n'y est placé que par script (tabIndex -1, hors tabulation) : un contour gâcherait la capture. */
+.lettre:focus,
 .lettre:focus-visible {
-  outline: 3px solid var(--bleu);
+  outline: none;
 }
 
 .lettre__entete {
@@ -366,6 +364,41 @@ body {
   margin: 0;
   padding-left: 1.4em;
   list-style: '– ';
+}
+
+/* ---------- Réconciliation ---------- */
+
+.reconciliation {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px dashed var(--encre-douce);
+  border-radius: 6px;
+}
+
+.reconciliation__titre {
+  margin: 0 0 12px;
+  font: 600 1.25rem var(--serif);
+}
+
+.reconciliation__modele {
+  margin: 0;
+  font: 0.9375rem/1.6 var(--machine);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.reconciliation__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.reconciliation__statut {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--encre-douce);
 }
 
 @media (min-width: 640px) {

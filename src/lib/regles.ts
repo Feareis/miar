@@ -116,12 +116,25 @@ function noter(regles: readonly Regle[], demande: string, mots: number): number 
   return Math.min(20, Math.max(0, note));
 }
 
+function preparer(demande: string): Demande {
+  return { accentuee: minuscules(demande), texte: normaliser(demande), mots: compterMots(demande) };
+}
+
+/** Règles déclenchées, les plus lourdes d'abord (tri stable : à poids égal, l'ordre de REGLES est conservé). */
+function reglesDeclenchees(d: Demande): Regle[] {
+  return REGLES.filter((r) => r.declenchee(d)).sort((a, b) => a.points - b.points);
+}
+
+/** Tous les griefs, sans la limite de la lettre : la réconciliation doit signaler chaque manque. */
+export function detecterGriefs(demande: string): CodeGrief[] {
+  return reglesDeclenchees(preparer(demande)).map((r) => r.code);
+}
+
 export function analyser(demande: string): Analyse {
-  const d: Demande = { accentuee: minuscules(demande), texte: normaliser(demande), mots: compterMots(demande) };
-  const declenchees = REGLES.filter((r) => r.declenchee(d));
+  const d = preparer(demande);
+  const declenchees = reglesDeclenchees(d);
   const note = noter(declenchees, demande, d.mots);
-  // Tri stable : à poids égal, l'ordre de REGLES est conservé.
-  const griefs = [...declenchees].sort((a, b) => a.points - b.points).slice(0, GRIEFS_MAX).map((r) => r.code);
+  const griefs = declenchees.slice(0, GRIEFS_MAX).map((r) => r.code);
 
   if (contientMotBloque(demande)) return { griefs, note, verdict: 'refus', citation: null };
   const aucunGriefLourd = declenchees.every((r) => r.points > POINTS_GRIEF_LOURD);
