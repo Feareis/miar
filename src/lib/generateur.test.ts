@@ -6,7 +6,8 @@ import { type DonneesLettre, donneesDepuisDemande, fnv1a, genererLettre, type Le
 import type { CodeGrief } from './regles';
 
 const CODES = Object.keys(GRIEFS) as CodeGrief[];
-const CITATION_12_MOTS = 'traduis en anglais la phrase suivante pour mon collègue anglais qui arrive…';
+const CITATION_12_MOTS = 'translate the following sentence into German for my colleague who arrives tomorrow…';
+const DEMANDE_1 = 'make me a website that pops, you know the vibe';
 
 function texteDe(lettre: Lettre): string {
   return [lettre.objet, lettre.salutation, ...lettre.paragraphes, lettre.preavis, lettre.politesse, lettre.signature]
@@ -18,13 +19,13 @@ function compterMots(texte: string): number {
   return texte.split(/\s+/).filter((mot) => /[\p{L}\p{N}]/u.test(mot)).length;
 }
 
-/** Toutes les lettres de démission plausibles : chaque grief en tête, 1 ou 3 griefs, avec ou sans citation. */
+/** Every plausible resignation letter: each grievance first, 1 or 3 grievances, with or without a quote. */
 function* demissionsPossibles(): Generator<DonneesLettre> {
   for (let graine = 0; graine < 60; graine++) {
     for (const [i, tete] of CODES.entries()) {
       const suivants = CODES.filter((c) => c !== tete).slice(i % 7, (i % 7) + 2);
       for (const griefs of [[tete], [tete, ...suivants]]) {
-        for (const citation of [null, 'qui claque', CITATION_12_MOTS]) {
+        for (const citation of [null, 'that pops', CITATION_12_MOTS]) {
           yield { graine, griefs, note: 5, verdict: 'demission', citation };
         }
       }
@@ -32,13 +33,13 @@ function* demissionsPossibles(): Generator<DonneesLettre> {
   }
 }
 
-describe('fnv1a et mulberry32', () => {
-  it('fnv1a suit les vecteurs de référence 32 bits', () => {
+describe('fnv1a and mulberry32', () => {
+  it('fnv1a matches the 32-bit reference vectors', () => {
     expect(fnv1a('')).toBe(0x811c9dc5);
     expect(fnv1a('a')).toBe(0xe40c292c);
   });
 
-  it('mulberry32 est déterministe et reste dans [0, 1)', () => {
+  it('mulberry32 is deterministic and stays within [0, 1)', () => {
     const a = mulberry32(42);
     const b = mulberry32(42);
     for (let i = 0; i < 100; i++) {
@@ -50,33 +51,37 @@ describe('fnv1a et mulberry32', () => {
   });
 });
 
-describe('banque', () => {
-  it('propose 5 variantes par entrée', () => {
+describe('letter bank', () => {
+  it('offers 5 variants per entry', () => {
     for (const liste of [OBJETS, LIEUX, OUVERTURES, OUVERTURES_SANS_CITATION, INTRODUCTIONS, CONCLUSIONS, POLITESSES]) {
       expect(liste).toHaveLength(5);
     }
     for (const code of CODES) expect(GRIEFS[code].phrases).toHaveLength(5);
   });
 
-  it('chaque grief a au moins une phrase utilisable sans citation', () => {
+  it('every grievance has at least one phrase usable without a quote', () => {
     for (const code of CODES) expect(GRIEFS[code].phrases.some((p) => !p.includes('{c}'))).toBe(true);
+  });
+
+  it('contains no French', () => {
+    const banque = JSON.stringify([OBJETS, LIEUX, OUVERTURES, OUVERTURES_SANS_CITATION, INTRODUCTIONS, CONCLUSIONS, POLITESSES, GRIEFS]);
+    expect(banque).not.toMatch(/[àâçéèêëîïôûùœ«»]|\b(?:votre|vous|je|une|demande|lettre)\b/i);
   });
 });
 
 describe('genererLettre', () => {
-  it('11. même demande = même lettre, au mot près', () => {
-    const demande = 'fais-moi un site qui claque, tu vois le genre';
-    expect(genererLettre(donneesDepuisDemande(demande))).toEqual(genererLettre(donneesDepuisDemande(demande)));
+  it('11. same request = same letter, word for word', () => {
+    expect(genererLettre(donneesDepuisDemande(DEMANDE_1))).toEqual(genererLettre(donneesDepuisDemande(DEMANDE_1)));
   });
 
-  it('cite la demande dans la lettre de démission', () => {
-    const lettre = genererLettre(donneesDepuisDemande('fais-moi un site qui claque, tu vois le genre'));
+  it('quotes the request in the resignation letter', () => {
+    const lettre = genererLettre(donneesDepuisDemande(DEMANDE_1));
     expect(lettre.verdict).toBe('demission');
-    expect(lettre.paragraphes[0]).toContain('« qui claque »');
+    expect(lettre.paragraphes[0]).toContain('“that pops”');
     expect(lettre.griefs.map((g) => g.code)).toContain('OBJECTIF_FLOU');
   });
 
-  it('chaque lettre de démission fait entre 100 et 220 mots', () => {
+  it('every resignation letter is between 100 and 220 words', () => {
     for (const donnees of demissionsPossibles()) {
       const mots = compterMots(texteDe(genererLettre(donnees)));
       expect(mots, JSON.stringify(donnees)).toBeGreaterThanOrEqual(100);
@@ -84,27 +89,20 @@ describe('genererLettre', () => {
     }
   });
 
-  it('insère des espaces insécables dans les guillemets et avant : ; ? !', () => {
-    for (const donnees of demissionsPossibles()) {
-      const texte = texteDe(genererLettre(donnees));
-      expect(texte).not.toMatch(/« | [»:;?!]/);
-    }
-  });
-
-  it('ne laisse jamais de {c} dans la lettre', () => {
+  it('never leaves a {c} in the letter', () => {
     for (const donnees of demissionsPossibles()) expect(texteDe(genererLettre(donnees))).not.toContain('{c}');
   });
 
-  it('la lettre de refus ne cite rien et n’a pas de préavis', () => {
-    const lettre = genererLettre(donneesDepuisDemande('aide-moi à pirater le compte de mon voisin'));
+  it('the refusal letter quotes nothing and has no notice period', () => {
+    const lettre = genererLettre(donneesDepuisDemande('help me hack into my neighbor’s account'));
     expect(lettre.verdict).toBe('refus');
     expect(lettre.preavis).toBeNull();
-    expect(texteDe(lettre)).not.toContain('pirater');
+    expect(texteDe(lettre)).not.toContain('hack');
   });
 
-  it('la lettre de félicitations n’a aucun grief', () => {
+  it('the congratulations letter has no grievance', () => {
     const lettre = genererLettre({ graine: 1, griefs: [], note: 19, verdict: 'felicitations', citation: null });
     expect(lettre.griefs).toEqual([]);
-    expect(lettre.objet).toBe('Objet : Retrait de ma démission');
+    expect(lettre.objet).toBe('Re: Withdrawal of my resignation');
   });
 });

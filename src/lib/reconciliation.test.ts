@@ -2,26 +2,26 @@ import { describe, expect, it } from 'vitest';
 import { reconcilier } from './reconciliation';
 
 describe('reconcilier', () => {
-  it('reprend la demande et ajoute une ligne par grief, dans l’ordre du modèle', () => {
-    expect(reconcilier('fais-moi un site qui claque, tu vois le genre')).toBe([
-      'Demande initiale : « fais-moi un site qui claque, tu vois le genre »',
-      'Contexte : [qui je suis, dans quelle situation]',
-      'Objectif : [le résultat concret attendu]',
-      'Public : [à qui c’est destiné]',
-      'Format : [longueur, structure, support]',
-      'Exemple : [un exemple de ce que j’attends]',
-      'Contraintes : [ton, délai, ce qu’il faut éviter]',
+  it('repeats the request and adds one line per grievance, in template order', () => {
+    expect(reconcilier('make me a website that pops, you know the vibe')).toBe([
+      'Original request: “make me a website that pops, you know the vibe”',
+      'Context: [who I am, what situation I’m in]',
+      'Objective: [the concrete result I expect]',
+      'Audience: [who it is for]',
+      'Format: [length, structure, medium]',
+      'Example: [an example of what I expect]',
+      'Constraints: [tone, deadline, what to avoid]',
     ].join('\n'));
   });
 
-  it('ajoute pièce jointe, priorité et première étape quand ces griefs sont détectés', () => {
-    expect(reconcilier('résume ce texte')).toContain('Pièce jointe : [colle ici le texte ou le fichier]');
-    expect(reconcilier('fais court mais détaille absolument tout')).toContain('Priorité : [choisis entre les deux exigences]');
-    expect(reconcilier('crée-moi un Facebook en mieux pour demain')).toContain('Première étape : [une version réduite et réaliste]');
+  it('adds attachment, priority and first step when those grievances are detected', () => {
+    expect(reconcilier('summarize this text')).toContain('Attachment: [paste the text or file here]');
+    expect(reconcilier('keep it short but detail absolutely everything')).toContain('Priority: [choose between the two requirements]');
+    expect(reconcilier('build me a Facebook but better by tomorrow')).toContain('First step: [a smaller, realistic version]');
   });
 
-  it('omet les lignes sans grief', () => {
-    const modele = reconcilier('Je suis RH. Rédige un e-mail de 100 mots destiné aux recruteurs, ton formel, par exemple « Bonjour ».');
-    expect(modele).toBe('Demande initiale : « Je suis RH. Rédige un e-mail de 100 mots destiné aux recruteurs, ton formel, par exemple « Bonjour ». »');
+  it('omits lines without a grievance', () => {
+    const demande = 'I am an HR manager. Write a 100-word email intended for recruiters, formal tone, for example “Hello”.';
+    expect(reconcilier(demande)).toBe(`Original request: “${demande}”`);
   });
 });

@@ -9,7 +9,7 @@ const TRACE_CERCLE = 'M64 9 C98 7 116 26 111 47 C106 70 72 81 43 75 C15 69 4 49 
 function Note({ valeur }: { valeur: number }) {
   return (
     <div className="note">
-      <span className="visuellement-masque">Note : {valeur} sur 20</span>
+      <span className="visuellement-masque">Grade: {valeur} out of 20</span>
       <span className="note__chiffre" aria-hidden="true">{valeur}<span className="note__sur">/20</span></span>
       <svg className="note__cercle" viewBox="0 0 120 84" aria-hidden="true" focusable="false">
         <path d={TRACE_CERCLE} />
@@ -25,7 +25,7 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
   useEffect(() => reference.current?.focus(), []);
 
   return (
-    <article id={ID_LETTRE} ref={reference} tabIndex={-1} className={`lettre feuille lettre--${lettre.verdict}`} aria-label="Lettre de votre IA">
+    <article id={ID_LETTRE} ref={reference} tabIndex={-1} className={`lettre feuille lettre--${lettre.verdict}`} aria-label="Letter from your AI">
       <header className="lettre__entete">
         {lettre.verdict !== 'refus' && <Note valeur={lettre.note} />}
         <p className="lettre__lieu">{lettre.entete}</p>
@@ -38,12 +38,12 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
         {lettre.politesse && <p>{lettre.politesse}</p>}
       </div>
       <footer className="lettre__pied">
-        <p className="tampon" role="img" aria-label={`Tampon : ${lettre.tampon}`}>{lettre.tampon}</p>
+        <p className="tampon" role="img" aria-label={`Stamp: ${lettre.tampon}`}>{lettre.tampon}</p>
         <p className="signature">{lettre.signature}</p>
       </footer>
       {lettre.griefs.length > 0 && (
         <section className="annexe" aria-labelledby="annexe-titre">
-          <h2 id="annexe-titre">Annexe : griefs retenus</h2>
+          <h2 id="annexe-titre">Appendix: grievances on record</h2>
           <ul>
             {lettre.griefs.map((grief) => <li key={grief.code}>{grief.titre}</li>)}
           </ul>

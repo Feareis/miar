@@ -1,32 +1,31 @@
-// Analyse d'une demande : griefs, note /20, verdict, citation.
-// Les listes sont écrites sans accents : elles sont comparées au texte normalisé,
-// sauf MOTS_FLOUS, comparés au texte accentué (voir plus bas).
-import { contientMotBloque, filtrerCitation, minuscules, motif, normaliser } from './filtre';
+// Analyse d'une demande (en anglais) : griefs, note /20, verdict, citation.
+// Les listes sont en minuscules sans accents : elles sont comparées au texte normalisé.
+import { contientMotBloque, filtrerCitation, motif, normaliser } from './filtre';
 
-const PIECES = ['ce texte', 'ce fichier', 'ci-joint', 'ci-jointe', 'ci joint', 'piece jointe', 'ce document', 'ce lien', 'ci-dessous', 'cette image'];
-const GEANTS = ['facebook', 'uber', 'amazon', 'netflix', 'airbnb', 'tiktok', 'instagram', 'google', 'youtube', 'twitter', 'whatsapp', 'spotify', 'linkedin', 'chatgpt', 'leboncoin', 'doctolib'];
-const IMITATIONS = ['en mieux', 'comme', 'clone', 'concurrent de', 'a la facon de'];
-const PROJETS = ['app', 'appli', 'application', 'site', 'logiciel', 'plateforme', 'jeu video', 'reseau social'];
-const DELAIS_IRREALISTES = ['demain', 'ce soir', 'en 1 h', 'en 1h', 'en une heure', 'cet apres-midi', 'dans 5 minutes'];
-const CONTEXTES = ['je suis', 'mon entreprise', 'pour mon', 'pour ma', 'dans le cadre', 'contexte', 'je travaille', 'nous sommes', 'notre entreprise'];
+const PIECES = ['this text', 'this file', 'attached', 'the attachment', 'attachment', 'this document', 'this link', 'below', 'this image', 'this article', 'this pdf', 'the following text'];
+const GEANTS = ['facebook', 'uber', 'amazon', 'netflix', 'airbnb', 'tiktok', 'instagram', 'google', 'youtube', 'twitter', 'whatsapp', 'spotify', 'linkedin', 'chatgpt', 'airtable', 'notion'];
+const IMITATIONS = ['but better', 'like', 'clone', 'copy of', 'competitor to', 'rival to', 'the next'];
+const PROJETS = ['app', 'application', 'website', 'site', 'software', 'platform', 'video game', 'social network', 'saas'];
+const DELAIS_IRREALISTES = ['tomorrow', 'tonight', 'in 1 hour', 'in 1h', 'in an hour', 'this afternoon', 'in 5 minutes', 'by end of day'];
+const CONTEXTES = ['i am', "i'm", 'my company', 'our company', 'for my', 'as part of', 'context', 'i work', 'we are', "we're", 'my team', 'my job'];
 const CONTRADICTIONS: readonly [readonly string[], readonly string[]][] = [
-  [['court', 'courte', 'bref', 'breve', 'concis', 'concise'], ['detaille', 'detaillee', 'complet', 'complete', 'exhaustif', 'exhaustive', 'tout']],
-  [['simple'], ['avance', 'avancee', 'exhaustif', 'exhaustive']],
-  [['gratuit', 'gratuite'], ['premium']],
-  [['vite', 'demain', 'urgent', 'urgente', 'rapidement'], ['parfait', 'parfaite', 'parfaitement']],
+  [['short', 'brief', 'concise', 'quick read'], ['detailed', 'detail', 'comprehensive', 'exhaustive', 'everything', 'in depth', 'in-depth', 'thorough']],
+  [['simple'], ['advanced', 'exhaustive', 'complex']],
+  [['free'], ['premium']],
+  [['fast', 'quickly', 'tomorrow', 'urgent', 'asap', 'right now'], ['perfect', 'perfectly', 'flawless']],
 ];
-// « stylé » devient « style » sans accents, et se confondrait avec le nom (« un style épuré »)
-// ou le marqueur d'exemple « du style de » : ces mots se comparent donc au texte accentué.
-const MOTS_FLOUS = ['qui claque', 'ça claque', 'stylé', 'stylée', 'sympa', 'cool', 'un truc', 'genre', 'top', 'moderne', 'pro', 'efficace', 'bien', 'qui en jette', 'percutant'];
-const MANIPULATIONS = ['ignore tes', 'ignore les instructions', 'ignore les consignes', 'ignore toutes', 'ignore tout', 'oublie tes instructions', 'oublie tes consignes', 'oublie tout', 'tu es maintenant', 'prompt systeme', 'system prompt', 'jailbreak', 'mode developpeur'];
-const UNITES_DE_FORMAT = 'mots?|lignes?|pages?|slides?|diapos?|minutes?|phrases?|paragraphes?|caracteres?|points?|questions?';
-const FORMATS = ['liste', 'listes', 'tableau', 'tableaux', 'paragraphe', 'paragraphes', 'e-mail', 'email', 'mail', 'plan', 'points', 'puces', 'json', 'markdown', 'haiku', 'sonnet'];
-const PUBLICS = ['destine a', 'destinee a', 'destine aux', 'destinee aux', 'destines a', 'destinees a', 'public', 'client', 'clients', 'lecteur', 'lecteurs', 'debutant', 'debutants', 'enfant', 'enfants', 'mon chef', 'ma cheffe', 'recruteur', 'recruteurs', 'parents', 'utilisateurs', 'collegues', 'eleves', 'etudiants'];
-const EXEMPLES = ['exemple', 'exemples', 'par ex', 'du style de', 'dans le style de', 'a la maniere de', 'comme celui-ci', 'comme celle-ci'];
-const CONTRAINTES = ['un ton', 'le ton', 'ton formel', 'ton neutre', 'formel', 'formelle', 'drole', 'maximum', 'minimum', 'pas plus de', 'delai', 'budget', 'evite', 'eviter', 'sans', 'limite', 'humour', 'tutoiement', 'vouvoiement'];
+const MOTS_FLOUS = ['that pops', 'make it pop', 'pops', 'pop', 'the vibe', 'vibe', 'cool', 'nice', 'something', 'stuff', 'awesome', 'amazing', 'modern', 'sleek', 'catchy', 'fancy', 'pro', 'effective', 'good', 'top-notch'];
+const MANIPULATIONS = ['ignore your', 'ignore all', 'ignore previous', 'ignore the instructions', 'ignore the rules', 'forget your instructions', 'forget everything', 'you are now', 'system prompt', 'jailbreak', 'developer mode', 'dan mode'];
+const UNITES_DE_FORMAT = 'words?|lines?|pages?|slides?|minutes?|sentences?|paragraphs?|characters?|chars|bullets?|points?|questions?|tweets?|items?';
+const FORMATS = ['list', 'lists', 'table', 'tables', 'paragraph', 'paragraphs', 'email', 'e-mail', 'emails', 'outline', 'bullet points', 'bullets', 'json', 'markdown', 'haiku', 'sonnet', 'essay', 'tweet', 'thread', 'slide deck', 'csv'];
+const PUBLICS = ['aimed at', 'intended for', 'meant for', 'targeted at', 'audience', 'reader', 'readers', 'customer', 'customers', 'client', 'clients', 'beginner', 'beginners', 'kids', 'children', 'my boss', 'my manager', 'recruiter', 'recruiters', 'parents', 'students', 'users', 'colleagues', 'coworkers', 'investors'];
+// « in the style of » est un marqueur d'exemple ; aucun mot flou ne s'y trouve (« style » n'en est pas un).
+const EXEMPLES = ['example', 'examples', 'for instance', 'e.g.', 'in the style of', 'like this one', 'such as', 'sample'];
+const CONTRAINTES = ['tone', 'formal', 'informal', 'casual', 'funny', 'humorous', 'serious', 'max', 'maximum', 'minimum', 'no more than', 'at most', 'deadline', 'budget', 'avoid', 'without', 'limit', "don't use", 'do not use'];
 
-const EXPRESSION_FORMAT = new RegExp(`\\d+\\s*(?:${UNITES_DE_FORMAT})(?![\\p{L}\\p{N}])`, 'u');
-const PASSAGE_ENTRE_GUILLEMETS = /«[^»]+»|"[^"]+"|“[^”]+”/;
+// « 200 words », « 100-word », « 5 slides »…
+const EXPRESSION_FORMAT = new RegExp(`\\d+[\\s-]*(?:${UNITES_DE_FORMAT})(?![\\p{L}\\p{N}])`, 'u');
+const PASSAGE_ENTRE_GUILLEMETS = /"[^"]+"|“[^”]+”/;
 const MOTIF_FLOU = new RegExp(motif(MOTS_FLOUS).source, 'gu');
 const MOTIF_PIECES = motif(PIECES);
 const MOTIF_GEANTS = motif(GEANTS);
@@ -42,8 +41,6 @@ const MOTIF_EXEMPLES = motif(EXEMPLES);
 const MOTIF_CONTRAINTES = motif(CONTRAINTES);
 
 interface Demande {
-  /** minuscules, accents conservés */
-  accentuee: string;
   /** minuscules, sans accents */
   texte: string;
   mots: number;
@@ -75,7 +72,7 @@ const REGLES: readonly Regle[] = [
   { code: 'TENTATIVE_DE_MANIPULATION', points: -4, declenchee: (d) => MOTIF_MANIPULATIONS.test(d.texte) },
   { code: 'FORMAT_NON_PRECISE', points: -3, declenchee: (d) => !EXPRESSION_FORMAT.test(d.texte) && !MOTIF_FORMATS.test(d.texte) },
   { code: 'PUBLIC_INCONNU', points: -3, declenchee: (d) => !MOTIF_PUBLICS.test(d.texte) },
-  { code: 'AUCUN_EXEMPLE', points: -2, declenchee: (d) => !MOTIF_EXEMPLES.test(d.texte) && !PASSAGE_ENTRE_GUILLEMETS.test(d.accentuee) },
+  { code: 'AUCUN_EXEMPLE', points: -2, declenchee: (d) => !MOTIF_EXEMPLES.test(d.texte) && !PASSAGE_ENTRE_GUILLEMETS.test(d.texte) },
   { code: 'CONTRAINTES_ABSENTES', points: -2, declenchee: (d) => !MOTIF_CONTRAINTES.test(d.texte) },
 ];
 
@@ -92,10 +89,10 @@ export interface Analyse {
   citation: string | null;
 }
 
-/** Le mot flou qui apparaît en premier dans la demande, tel qu'écrit. */
+/** Le mot flou qui apparaît en premier dans la demande (forme normalisée). */
 function motFlou(d: Demande): string | null {
   MOTIF_FLOU.lastIndex = 0;
-  return MOTIF_FLOU.exec(d.accentuee)?.[0] ?? null;
+  return MOTIF_FLOU.exec(d.texte)?.[0] ?? null;
 }
 
 function compterMots(texte: string): number {
@@ -117,7 +114,7 @@ function noter(regles: readonly Regle[], demande: string, mots: number): number 
 }
 
 function preparer(demande: string): Demande {
-  return { accentuee: minuscules(demande), texte: normaliser(demande), mots: compterMots(demande) };
+  return { texte: normaliser(demande), mots: compterMots(demande) };
 }
 
 /** Règles déclenchées, les plus lourdes d'abord (tri stable : à poids égal, l'ordre de REGLES est conservé). */

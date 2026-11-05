@@ -40,7 +40,7 @@ function versBase64Url(texte: string): string {
 
 /** Lève une erreur si le texte n'est pas du base64url valide encodant de l'UTF-8 valide. */
 function depuisBase64Url(texte: string): string {
-  if (!/^[A-Za-z0-9_-]+$/.test(texte)) throw new Error('caractères hors base64url');
+  if (!/^[A-Za-z0-9_-]+$/.test(texte)) throw new Error('not base64url');
   const binaire = atob(texte.replace(/-/g, '+').replace(/_/g, '/'));
   const octets = Uint8Array.from(binaire, (c) => c.charCodeAt(0));
   return new TextDecoder('utf-8', { fatal: true }).decode(octets);

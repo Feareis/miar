@@ -69,23 +69,6 @@ function tirerPhrases(alea: () => number, options: readonly string[], citation: 
   return choisies.map((p) => (citation === null ? p : p.replaceAll('{c}', citation)));
 }
 
-const ESPACE_INSECABLE = ' ';
-
-/** Typographie française : les guillemets et la ponctuation haute ne se détachent jamais de leur mot. */
-function typographier(texte: string): string {
-  return texte.replace(/« /g, `«${ESPACE_INSECABLE}`).replace(/ ([»:;?!])/g, `${ESPACE_INSECABLE}$1`);
-}
-
-function typographierCorps(corps: Corps): Corps {
-  return {
-    objet: typographier(corps.objet),
-    paragraphes: corps.paragraphes.map(typographier),
-    preavis: corps.preavis && typographier(corps.preavis),
-    politesse: corps.politesse && typographier(corps.politesse),
-    signature: corps.signature,
-  };
-}
-
 export function donneesDepuisDemande(demande: string): DonneesLettre {
   return { ...analyser(demande), graine: fnv1a(normaliser(demande)) };
 }
@@ -121,7 +104,7 @@ export function genererLettre(d: DonneesLettre): Lettre {
     tampon: TAMPONS[d.verdict],
     entete,
     salutation: SALUTATION,
-    ...typographierCorps(corpsDeLettre(d, alea)),
+    ...corpsDeLettre(d, alea),
     note: d.note,
     griefs: d.verdict === 'demission' ? d.griefs.map((code) => ({ code, titre: GRIEFS[code].titre })) : [],
   };

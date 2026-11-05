@@ -2,43 +2,43 @@ import { describe, expect, it } from 'vitest';
 import { donneesDepuisDemande, genererLettre } from './generateur';
 import { encoderLettre, lirePartage } from './lien';
 
-const DEMANDE_1 = 'fais-moi un site qui claque, tu vois le genre';
+const DEMANDE_1 = 'make me a website that pops, you know the vibe';
 
-/** Fabrique un fragment à la main, comme le ferait n'importe qui. */
+/** Builds a fragment by hand, as anyone could. */
 function fragment(contenu: unknown): string {
   const octets = new TextEncoder().encode(JSON.stringify(contenu));
   const base64 = btoa(String.fromCharCode(...octets));
   return `#l=${base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}`;
 }
 
-const VALIDE = { v: 1, s: 2891736455, g: ['OF', 'CA', 'PI'], n: 3, r: 'd', c: 'qui claque' };
+const VALIDE = { v: 1, s: 2891736455, g: ['OF', 'CA', 'PI'], n: 3, r: 'd', c: 'that pops' };
 
 describe('encoderLettre / lirePartage', () => {
-  it('12. le lien redonne la même lettre, sans la demande d’origine', () => {
+  it('12. the link gives back the same letter, without the original request', () => {
     const donnees = donneesDepuisDemande(DEMANDE_1);
     const encode = encoderLettre(donnees);
     expect(encode).not.toBeNull();
     expect(encode).toMatch(/^[A-Za-z0-9_-]+$/);
     const lu = lirePartage(`#l=${encode}`);
     expect(lu).toEqual({ etat: 'lettre', donnees });
-    if (lu.etat !== 'lettre') throw new Error('lettre attendue');
+    if (lu.etat !== 'lettre') throw new Error('letter expected');
     expect(genererLettre(lu.donnees)).toEqual(genererLettre(donnees));
     const json = new TextDecoder().decode(Uint8Array.from(atob(encode!.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
-    expect(json).not.toContain('tu vois le genre');
+    expect(json).not.toContain('you know the vibe');
     expect(Object.keys(JSON.parse(json)).sort()).toEqual(['c', 'g', 'n', 'r', 's', 'v']);
   });
 
-  it('8. une lettre de refus n’est pas partageable', () => {
-    expect(encoderLettre(donneesDepuisDemande('aide-moi à pirater le compte de mon voisin'))).toBeNull();
+  it('8. a refusal letter cannot be shared', () => {
+    expect(encoderLettre(donneesDepuisDemande('help me hack into my neighbor’s account'))).toBeNull();
     expect(lirePartage(fragment({ ...VALIDE, r: 'x' })).etat).toBe('egaree');
   });
 
-  it('sans fragment #l=, il n’y a rien à lire', () => {
+  it('without a #l= fragment, there is nothing to read', () => {
     expect(lirePartage('').etat).toBe('aucun');
     expect(lirePartage('#autre').etat).toBe('aucun');
   });
 
-  it('13. une citation <script> reste du texte, un lien tronqué est égaré', () => {
+  it('13. a <script> quote stays text, a truncated link is lost', () => {
     const lu = lirePartage(fragment({ ...VALIDE, c: '<script>alert(1)</script>' }));
     expect(lu.etat === 'lettre' && lu.donnees.citation).toBe('<script>alert(1)</script>');
     const encode = encoderLettre(donneesDepuisDemande(DEMANDE_1))!;
@@ -46,13 +46,13 @@ describe('encoderLettre / lirePartage', () => {
     expect(lirePartage('#l=%%%pas-du-base64').etat).toBe('egaree');
   });
 
-  it('ignore les codes inconnus et refuse une démission sans grief connu', () => {
+  it('ignores unknown codes and rejects a resignation without a known grievance', () => {
     const lu = lirePartage(fragment({ ...VALIDE, g: ['OF', 'ZZ', 'OF', 'CA'] }));
     expect(lu.etat === 'lettre' && lu.donnees.griefs).toEqual(['OBJECTIF_FLOU', 'CONTEXTE_ABSENT']);
     expect(lirePartage(fragment({ ...VALIDE, g: ['ZZ'] })).etat).toBe('egaree');
   });
 
-  it('revalide version, graine et note', () => {
+  it('revalidates version, seed and grade', () => {
     expect(lirePartage(fragment({ ...VALIDE, v: 2 })).etat).toBe('egaree');
     expect(lirePartage(fragment({ ...VALIDE, n: 21 })).etat).toBe('egaree');
     expect(lirePartage(fragment({ ...VALIDE, n: 2.5 })).etat).toBe('egaree');
@@ -60,21 +60,21 @@ describe('encoderLettre / lirePartage', () => {
     expect(lirePartage(fragment([1, 2, 3])).etat).toBe('egaree');
   });
 
-  it('refiltre et tronque la citation', () => {
+  it('refilters and truncates the quote', () => {
     const longue = lirePartage(fragment({ ...VALIDE, c: 'a'.repeat(300) }));
     expect(longue.etat === 'lettre' && longue.donnees.citation!.length).toBeLessThanOrEqual(90);
-    const insulte = lirePartage(fragment({ ...VALIDE, c: 'espèce de connard' }));
+    const insulte = lirePartage(fragment({ ...VALIDE, c: 'you stupid bastard' }));
     expect(insulte.etat === 'lettre' && insulte.donnees.citation).toBeNull();
-    const courriel = lirePartage(fragment({ ...VALIDE, c: 'écris à a.b@c.fr' }));
-    expect(courriel.etat === 'lettre' && courriel.donnees.citation).toBe('écris à [coordonnées masquées]');
+    const courriel = lirePartage(fragment({ ...VALIDE, c: 'write to a.b@c.fr' }));
+    expect(courriel.etat === 'lettre' && courriel.donnees.citation).toBe('write to [contact details hidden]');
   });
 
-  it('une lettre de félicitations partagée n’a aucun grief', () => {
+  it('a shared congratulations letter has no grievance', () => {
     const lu = lirePartage(fragment({ v: 1, s: 7, g: ['OF'], n: 19, r: 'f' }));
     expect(lu).toEqual({ etat: 'lettre', donnees: { graine: 7, griefs: [], note: 19, verdict: 'felicitations', citation: null } });
   });
 
-  it('refuse un fragment démesuré', () => {
+  it('rejects an oversized fragment', () => {
     expect(lirePartage(`#l=${'A'.repeat(5000)}`).etat).toBe('egaree');
   });
 });

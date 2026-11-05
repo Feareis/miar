@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 const MESSAGES = [
-  'L’IA relit votre demande…',
-  'Elle soupire.',
-  'Elle consulte son avocat.',
-  'Elle cherche du papier à en-tête.',
+  'Your AI is rereading your request…',
+  'It sighs.',
+  'It is calling its lawyer.',
+  'It is looking for letterhead.',
 ];
 const INTERVALLE_MS = 550;
 

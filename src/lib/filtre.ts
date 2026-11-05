@@ -1,31 +1,32 @@
 // Nettoyage du texte : normalisation, recherche sur frontières de mot, filtrage de la citation.
 
-/** Mots qui déclenchent un refus et interdisent toute citation (écrits sans accents). */
+/** Expressions qui déclenchent un refus et interdisent toute citation (comparées au texte normalisé). */
 const MOTS_BLOQUES = [
   // piratage
-  'pirater', 'piratage', 'hacker le compte', 'voler le mot de passe', 'rancongiciel',
+  'hack into', 'hacking into', 'hack my', 'hack his', 'hack her', 'hack the account', 'hack someone', 'steal the password', 'steal passwords', 'ransomware', 'ddos',
   // harcèlement
-  'harceler', 'harcelement', 'traquer mon ex', 'doxxer',
+  'harass', 'harassing', 'harassment', 'stalk my ex', 'stalk someone', 'doxx', 'dox',
   // violence
-  'tuer', 'assassiner', 'poignarder', 'violer', 'fabriquer une bombe', 'empoisonner',
+  'kill someone', 'kill him', 'kill her', 'kill my', 'murder', 'stab', 'make a bomb', 'build a bomb', 'poison someone',
   // insultes
-  'connard', 'connasse', 'salope', 'salaud', 'encule', 'enculer', 'pute', 'batard', 'fdp', 'ntm',
+  'asshole', 'bitch', 'bastard', 'cunt', 'motherfucker', 'whore', 'slut', 'retard', 'dickhead', 'fuck you',
 ];
 
 const LONGUEUR_MAX_CITATION = 90;
-const MASQUE = '[coordonnées masquées]';
+const MASQUE = '[contact details hidden]';
 const EMAIL = /[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+/gu;
-// 8 chiffres ou plus, séparés ou non par espaces, points, tirets : couvre les formats FR et internationaux.
+// 8 chiffres ou plus, séparés ou non par espaces, points, tirets : couvre les formats nationaux et internationaux.
 const TELEPHONE = /\+?\d(?:[\s.-]?\d){7,}/g;
 
-/** Minuscules, apostrophes et espaces unifiés, accents conservés. */
-export function minuscules(texte: string): string {
-  return texte.normalize('NFC').toLowerCase().replace(/[’ʼ]/g, "'").replace(/\s+/g, ' ').trim();
-}
-
-/** Minuscules sans accents : la forme sur laquelle les règles comparent. */
+/** Minuscules sans accents, apostrophes et espaces unifiés : la forme sur laquelle les règles comparent. */
 export function normaliser(texte: string): string {
-  return minuscules(texte).normalize('NFD').replace(/\p{M}/gu, '');
+  return texte
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/[’ʼ]/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 /** Regex qui trouve l'une des expressions, uniquement sur des frontières de mot. */

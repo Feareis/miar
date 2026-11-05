@@ -20,7 +20,7 @@ type Ecran =
   | { nom: 'partagee'; lettre: Lettre }
   | { nom: 'egaree' };
 
-const LETTRE_EGAREE = 'Cette lettre a été égarée par les services postaux.';
+const LETTRE_EGAREE = 'This letter was lost in the post.';
 
 /** Entre 1,5 et 2,5 s, fixé par la graine : l'attente est purement comique, l'analyse est instantanée. */
 function dureeAttente(graine: number): number {
@@ -65,7 +65,7 @@ export default function App() {
 
   const boutonCommencer = (
     <div className="actions">
-      <button type="button" className="bouton bouton--principal" onClick={commencer}>Faire démissionner mon IA aussi</button>
+      <button type="button" className="bouton bouton--principal" onClick={commencer}>Make my AI resign too</button>
     </div>
   );
 
