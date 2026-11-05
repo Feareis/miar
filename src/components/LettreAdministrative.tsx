@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import type { Lettre } from '../lib/generateur';
 
+export const ID_LETTRE = 'lettre';
+
 // Cercle tracé à la main : le trait déborde volontairement de son point de départ.
 const TRACE_CERCLE = 'M64 9 C98 7 116 26 111 47 C106 70 72 81 43 75 C15 69 4 49 10 30 C16 12 41 4 74 11';
 
@@ -23,7 +25,7 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
   useEffect(() => reference.current?.focus(), []);
 
   return (
-    <article ref={reference} tabIndex={-1} className={`lettre feuille lettre--${lettre.verdict}`} aria-label="Lettre de votre IA">
+    <article id={ID_LETTRE} ref={reference} tabIndex={-1} className={`lettre feuille lettre--${lettre.verdict}`} aria-label="Lettre de votre IA">
       <header className="lettre__entete">
         {lettre.verdict !== 'refus' && <Note valeur={lettre.note} />}
         <p className="lettre__lieu">{lettre.entete}</p>
@@ -47,6 +49,8 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
           </ul>
         </section>
       )}
+      {/* Imprimée sur chaque capture et chaque image exportée : c'est ce qui ramène au site. */}
+      <p className="lettre__adresse">{window.location.host}</p>
     </article>
   );
 }
