@@ -25,7 +25,26 @@ describe('encoderLettre / lirePartage', () => {
     expect(genererLettre(lu.donnees)).toEqual(genererLettre(donnees));
     const json = new TextDecoder().decode(Uint8Array.from(atob(encode!.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
     expect(json).not.toContain('you know the vibe');
-    expect(Object.keys(JSON.parse(json)).sort()).toEqual(['c', 'g', 'n', 'r', 's', 'v']);
+    expect(Object.keys(JSON.parse(json)).sort()).toEqual(['c', 'g', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w']);
+  });
+
+  it('a v1 link shared before the deeper reading still opens', () => {
+    expect(lirePartage(fragment(VALIDE))).toEqual({ etat: 'lettre', donnees: {
+      graine: 2891736455, griefs: ['OBJECTIF_FLOU', 'CONTEXTE_ABSENT', 'PUBLIC_INCONNU'], note: 3, verdict: 'demission',
+      citation: 'that pops', taches: [], termes: [], manques: [], sujet: null, remarque: null,
+    } });
+  });
+
+  it('revalidates the task reading and drops what does not fit', () => {
+    const bricole = { ...VALIDE, v: 2, t: ['VISUEL', 'ZZ', 'VISUEL', 'SITE', 'CODE'], m: [3, 0, 9, -1, 1.5, 0], x: 'for you bastard', p: ['LANGUE', 7] };
+    const lu = lirePartage(fragment(bricole));
+    expect(lu.etat === 'lettre' && lu.donnees).toMatchObject({ taches: ['VISUEL', 'SITE'], manques: [0, 3], sujet: null, remarque: null });
+    const ok = lirePartage(fragment({ ...VALIDE, v: 2, t: ['SITE', 'VISUEL'], w: ['landing page', '<b>pwned</b>'], m: [1], x: 'for my bakery', p: ['EXCLAMATIONS', 4] }));
+    expect(ok.etat === 'lettre' && ok.donnees).toMatchObject({
+      termes: ['landing page', null], sujet: 'for my bakery', remarque: { code: 'EXCLAMATIONS', n: 4 },
+    });
+    const sansTache = lirePartage(fragment({ ...VALIDE, v: 2, m: [0, 1] }));
+    expect(sansTache.etat === 'lettre' && sansTache.donnees.manques).toEqual([]);
   });
 
   it('8. a refusal letter cannot be shared', () => {
@@ -53,7 +72,7 @@ describe('encoderLettre / lirePartage', () => {
   });
 
   it('revalidates version, seed and grade', () => {
-    expect(lirePartage(fragment({ ...VALIDE, v: 2 })).etat).toBe('egaree');
+    expect(lirePartage(fragment({ ...VALIDE, v: 3 })).etat).toBe('egaree');
     expect(lirePartage(fragment({ ...VALIDE, n: 21 })).etat).toBe('egaree');
     expect(lirePartage(fragment({ ...VALIDE, n: 2.5 })).etat).toBe('egaree');
     expect(lirePartage(fragment({ ...VALIDE, s: -1 })).etat).toBe('egaree');
@@ -71,7 +90,9 @@ describe('encoderLettre / lirePartage', () => {
 
   it('a shared congratulations letter has no grievance', () => {
     const lu = lirePartage(fragment({ v: 1, s: 7, g: ['OF'], n: 19, r: 'f' }));
-    expect(lu).toEqual({ etat: 'lettre', donnees: { graine: 7, griefs: [], note: 19, verdict: 'felicitations', citation: null } });
+    expect(lu).toEqual({ etat: 'lettre', donnees: {
+      graine: 7, griefs: [], note: 19, verdict: 'felicitations', citation: null, taches: [], termes: [], manques: [], sujet: null, remarque: null,
+    } });
   });
 
   it('rejects an oversized fragment', () => {

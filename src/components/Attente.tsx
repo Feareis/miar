@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
+import { DELAI_PAR_LIGNE_MS } from '../lib/analyse/trace';
 
-const MESSAGES = [
-  'Your AI is rereading your request…',
-  'It sighs.',
-  'It is calling its lawyer.',
-  'It is looking for letterhead.',
-];
-const INTERVALLE_MS = 550;
-
-export default function Attente() {
-  const [index, setIndex] = useState(0);
+/** Journal d'analyse déroulé ligne à ligne : l'analyse est instantanée, l'attente est du théâtre. */
+export default function Attente({ lignes }: { lignes: readonly string[] }) {
+  const [visibles, setVisibles] = useState(1);
 
   useEffect(() => {
-    const rotation = setInterval(() => setIndex((i) => Math.min(i + 1, MESSAGES.length - 1)), INTERVALLE_MS);
-    return () => clearInterval(rotation);
-  }, []);
+    const deroulement = setInterval(() => setVisibles((n) => Math.min(n + 1, lignes.length)), DELAI_PAR_LIGNE_MS);
+    return () => clearInterval(deroulement);
+  }, [lignes.length]);
 
   return (
     <section className="attente feuille" aria-busy="true">
-      <p className="attente__message" role="status">{MESSAGES[index]}</p>
+      <p className="visuellement-masque" role="status">Your AI is analysing your request…</p>
+      <ol className="journal" aria-hidden="true">
+        {lignes.slice(0, visibles).map((ligne, i) => (
+          <li key={i} className={i === visibles - 1 ? 'journal__ligne journal__ligne--courante' : 'journal__ligne'}>{ligne}</li>
+        ))}
+      </ol>
     </section>
   );
 }

@@ -40,6 +40,7 @@ export default function LettreAdministrative({ lettre }: { lettre: Lettre }) {
         <p className="tampon" role="img" aria-label={`Stamp: ${lettre.tampon}`}>{lettre.tampon}</p>
         <p className="signature">{lettre.signature}</p>
       </footer>
+      {lettre.postScriptum && <p className="lettre__ps">{lettre.postScriptum}</p>}
       {lettre.griefs.length > 0 && (
         <section className="annexe" aria-labelledby="annexe-titre">
           <h2 id="annexe-titre">Appendix: grievances on record</h2>

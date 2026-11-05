@@ -25,7 +25,7 @@ const CONTRAINTES = ['tone', 'formal', 'informal', 'casual', 'funny', 'humorous'
 
 // « 200 words », « 100-word », « 5 slides »…
 const EXPRESSION_FORMAT = new RegExp(`\\d+[\\s-]*(?:${UNITES_DE_FORMAT})(?![\\p{L}\\p{N}])`, 'u');
-const PASSAGE_ENTRE_GUILLEMETS = /"[^"]+"|“[^”]+”/;
+export const PASSAGE_ENTRE_GUILLEMETS = /"[^"]+"|“[^”]+”/;
 const MOTIF_FLOU = new RegExp(motif(MOTS_FLOUS).source, 'gu');
 const MOTIF_PIECES = motif(PIECES);
 const MOTIF_GEANTS = motif(GEANTS);

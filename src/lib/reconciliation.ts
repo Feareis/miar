@@ -1,4 +1,6 @@
 // Modèle de prompt à compléter : pas de réécriture, une ligne à remplir par manque détecté.
+import { lireDemande } from './analyse/lecture';
+import { tache } from './analyse/taches';
 import { type CodeGrief, detecterGriefs } from './regles';
 
 /** Ordre d'affichage du modèle. TENTATIVE_DE_MANIPULATION n'a pas de ligne : il n'y a rien à compléter. */
@@ -14,8 +16,13 @@ const LIGNES: readonly (readonly [CodeGrief, string])[] = [
   ['PERIMETRE_DEMESURE', 'First step: [a smaller, realistic version]'],
 ];
 
+/** D'abord ce que la tâche reconnue exige (« Colours: […] » pour un logo), puis les manques génériques. */
 export function reconcilier(demande: string): string {
   const griefs = new Set(detecterGriefs(demande));
-  const lignes = LIGNES.filter(([code]) => griefs.has(code)).map(([, ligne]) => ligne);
-  return [`Original request: “${demande.trim()}”`, ...lignes].join('\n');
+  const { taches, manques } = lireDemande(demande);
+  const verifications = taches.length > 0 ? manques.map((i) => tache(taches[0].code).verifications[i]) : [];
+  for (const v of verifications) if (v.remplace) griefs.delete(v.remplace);
+  const propres = verifications.map((v) => v.ligne);
+  const generiques = LIGNES.filter(([code]) => griefs.has(code)).map(([, ligne]) => ligne);
+  return [`Original request: “${demande.trim()}”`, ...propres, ...generiques].join('\n');
 }

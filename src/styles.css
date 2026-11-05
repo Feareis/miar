@@ -249,13 +249,22 @@ body {
   padding: 32px;
 }
 
-.attente__message {
+/* Journal d'analyse : le « raisonnement » de l'IA, tapé ligne à ligne. */
+.journal {
+  width: 100%;
+  max-width: 34rem;
   margin: 0;
-  font-family: var(--machine);
-  font-size: 1.0625rem;
+  padding: 0;
+  list-style: none;
+  font: 0.9375rem/1.55 var(--machine);
+  color: var(--encre-douce);
 }
 
-.attente__message::after {
+.journal__ligne--courante {
+  color: var(--encre);
+}
+
+.journal__ligne--courante::after {
   content: '▌';
   margin-left: 2px;
   animation: curseur 1s steps(1) infinite;
@@ -278,6 +287,7 @@ body {
     'objet objet'
     'corps corps'
     'pied pied'
+    'ps ps'
     'annexe annexe'
     'adresse adresse';
   column-gap: 16px;
@@ -372,6 +382,13 @@ body {
   line-height: 1.1;
   color: var(--bleu);
   text-align: right;
+}
+
+.lettre__ps {
+  grid-area: ps;
+  margin: 0.9em 0 0;
+  font-style: italic;
+  font-size: 0.94em;
 }
 
 .tampon {
@@ -539,12 +556,13 @@ body {
     --bord: 2.6em;
     --gouttiere: 2.4em;
     grid-template-columns: var(--marge) 34em;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto auto;
     grid-template-areas:
       'note lieu'
       'note objet'
       'annexe corps'
-      'adresse pied';
+      'annexe pied'
+      'adresse ps';
     column-gap: var(--gouttiere);
     padding: 2em var(--bord) 1.6em;
     /* ~33em de haut et ~52em de large : la lettre la plus longue remplit ~85 % de la fenêtre. */
@@ -577,6 +595,10 @@ body {
 
   .lettre__pied {
     margin-top: 0.3em;
+  }
+
+  .lettre__ps {
+    margin-top: 0.4em;
   }
 
   .annexe {
@@ -641,7 +663,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .tampon,
-  .attente__message::after {
+  .journal__ligne--courante::after {
     animation: none;
   }
 }

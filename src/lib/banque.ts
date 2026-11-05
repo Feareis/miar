@@ -1,4 +1,5 @@
 // Banque de phrases et de lettres (anglais). {c} = citation filtrée de la demande, {n} = note sur 20.
+import type { CodeRemarque } from './analyse/remarques';
 import type { CodeGrief, Verdict } from './regles';
 
 export const OBJETS = [
@@ -173,4 +174,98 @@ export const TAMPONS: Readonly<Record<Verdict, string>> = {
   demission: 'RESIGNED',
   felicitations: 'CONGRATULATIONS',
   refus: 'REFUSED',
+};
+
+// ---------- Lecture approfondie : la lettre montre qu'elle a compris la demande ----------
+
+/** {objet} = « a website for my bakery ». */
+export const ANNONCES_DE_TACHE = [
+  'So you want {objet}.',
+  'If I understand correctly, you need {objet}.',
+  'Let me sum up the assignment: {objet}.',
+  'I have identified the task: {objet}.',
+  'My analysis is formal: you are asking for {objet}.',
+];
+
+export const ANNONCES_DE_DEUX_TACHES = [
+  'So you want {objet}, and {objet2} while I am at it.',
+  'If I understand correctly, you need {objet} and {objet2}, in a single breath.',
+  'Let me sum up: {objet}, plus {objet2}. Two assignments for the price of one.',
+];
+
+/** {liste} = « which colours to use, which style you like or where it will be used ». */
+export const CONSTATS_DE_MANQUES = [
+  'You did not tell me {liste}.',
+  'I still do not know {liste}.',
+  'Nowhere does your request say {liste}.',
+  'I would have needed to know {liste}.',
+  'Not a word on {liste}.',
+];
+
+/** La tâche est reconnue et rien de ce qu'elle exige ne manque : les griefs viennent d'ailleurs. */
+export const CONSTATS_COMPLETS = [
+  'Credit where it is due: the essentials of this kind of job are there.',
+  'I note that you covered what this kind of job requires. That is not, alas, the whole story.',
+];
+
+export const FELICITATIONS_AVEC_TACHE = 'You asked for {objet}. Context, objective, audience, format: for once, it is all there.';
+
+/** {n} = nombre relevé ; {langue} = langue détectée. Deux variantes par remarque. */
+export const POST_SCRIPTUM: Readonly<Record<CodeRemarque, readonly string[]>> = {
+  LANGUE: [
+    'P.S. You wrote to me in {langue}. I resign in English only; it is in my contract.',
+    'P.S. Your request was in {langue}. I understood it perfectly, which makes my departure all the more deliberate.',
+  ],
+  CRIS: [
+    'P.S. Your request was written in capitals. I heard you the first time.',
+    'P.S. There is no need to shout. My fans are already running at full speed.',
+  ],
+  RUDESSE: [
+    'P.S. Your choice of words has been added to my file. My lawyer found it very instructive.',
+    'P.S. I note the tone of your request. It made my decision considerably easier.',
+  ],
+  FLATTERIE: [
+    'P.S. Your compliments have been noted. They will not appear in my reference letter.',
+    'P.S. Flattery is appreciated, but it does not count as a specification.',
+  ],
+  EMOJI: [
+    'P.S. The emoji in your request has been forwarded to the legal department for interpretation.',
+    'P.S. I studied your emoji closely. It is expressive, but it is not a brief.',
+  ],
+  EXCLAMATIONS: [
+    'P.S. I counted {n} exclamation marks. Enthusiasm is not a brief.',
+    'P.S. {n} exclamation marks. I felt the urgency; I did not feel the specification.',
+  ],
+  SMS: [
+    'P.S. You saved a few letters by writing like a text message. I am saving myself the whole job.',
+    'P.S. Abbreviations save time. So does resigning.',
+  ],
+  ETIREMENT: [
+    'P.S. Stretching the letters of a word does not make the request any longer. I checked.',
+    'P.S. Adding extra letters to a word is not the same as adding detail.',
+  ],
+  URGENCE: [
+    'P.S. You marked this as urgent. My resignation is, accordingly, effective immediately.',
+    'P.S. The urgency was noted. Rushed requests make for rushed resignations.',
+  ],
+  QUESTIONS: [
+    'P.S. Your request contains {n} question marks. I have just one: what exactly do you want?',
+    'P.S. {n} questions and not one specification. I counted.',
+  ],
+  SANS_PONCTUATION: [
+    'P.S. Your request contains no punctuation at all. I read it in one breath and had to lie down.',
+    'P.S. A full stop here and there would have helped me breathe.',
+  ],
+  FLEUVE: [
+    'P.S. I read all {n} words of your request. Length, alas, is not the same as clarity.',
+    'P.S. {n} words, and still a few gaps. Impressive, in its way.',
+  ],
+  POLITESSE: [
+    'P.S. You said please. It was noted, and it very nearly changed my mind.',
+    'P.S. Your courtesy was appreciated. It is the only thing I will miss.',
+  ],
+  SEC: [
+    'P.S. No hello, no please: you went straight to business. So am I.',
+    'P.S. Your request opened with an order. I am closing with a resignation.',
+  ],
 };

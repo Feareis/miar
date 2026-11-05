@@ -3,6 +3,7 @@ import Accueil from './components/Accueil';
 import ActionsLettre from './components/ActionsLettre';
 import Attente from './components/Attente';
 import LettreAdministrative from './components/LettreAdministrative';
+import { dureeAttente, tracer } from './lib/analyse/trace';
 import { type DonneesLettre, donneesDepuisDemande, genererLettre, type Lettre } from './lib/generateur';
 import { encoderLettre, lirePartage } from './lib/lien';
 import { reconcilier } from './lib/reconciliation';
@@ -11,6 +12,8 @@ import { reconcilier } from './lib/reconciliation';
 interface Resultat {
   donnees: DonneesLettre;
   modele: string | null;
+  /** Journal d'analyse déroulé pendant l'attente. */
+  trace: string[];
 }
 
 type Ecran =
@@ -22,14 +25,9 @@ type Ecran =
 
 const LETTRE_EGAREE = 'This letter was lost in the post.';
 
-/** Entre 1,5 et 2,5 s, fixé par la graine : l'attente est purement comique, l'analyse est instantanée. */
-function dureeAttente(graine: number): number {
-  return 1500 + (graine % 1001);
-}
-
 function analyserDemande(demande: string): Resultat {
   const donnees = donneesDepuisDemande(demande);
-  return { donnees, modele: donnees.verdict === 'demission' ? reconcilier(demande) : null };
+  return { donnees, modele: donnees.verdict === 'demission' ? reconcilier(demande) : null, trace: tracer(demande, donnees) };
 }
 
 function ecranDepuisAdresse(): Ecran {
@@ -51,9 +49,9 @@ export default function App() {
 
   useEffect(() => {
     if (ecran.nom !== 'attente') return;
-    const { donnees, modele } = ecran.resultat;
+    const { donnees, modele, trace } = ecran.resultat;
     const afficher = () => setEcran({ nom: 'lettre', lettre: genererLettre(donnees), modele, encode: encoderLettre(donnees) });
-    const fin = setTimeout(afficher, dureeAttente(donnees.graine));
+    const fin = setTimeout(afficher, dureeAttente(trace.length));
     return () => clearTimeout(fin);
   }, [ecran]);
 
@@ -80,7 +78,7 @@ export default function App() {
           onSoumettre={() => setEcran({ nom: 'attente', resultat: analyserDemande(demande) })}
         />
       )}
-      {ecran.nom === 'attente' && <Attente />}
+      {ecran.nom === 'attente' && <Attente lignes={ecran.resultat.trace} />}
       {ecran.nom === 'lettre' && (
         <div className="bureau">
           <LettreAdministrative lettre={ecran.lettre} />
