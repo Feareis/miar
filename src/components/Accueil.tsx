@@ -1,4 +1,6 @@
 import { type FormEvent, useState } from 'react';
+import BoutonFuyant from './BoutonFuyant';
+import PostIt from './PostIt';
 
 const LONGUEUR_MAX = 2000;
 const EXEMPLES = [
@@ -9,6 +11,7 @@ const EXEMPLES = [
 const ERREUR_VIDE = 'Your AI cannot resign from a job it was never given.';
 const ERREUR_TROP_LONGUE = 'Your request exceeds the legal limit of 2,000 characters.';
 const nombre = new Intl.NumberFormat('en-US');
+const AUGMENTATION = ['Offer your AI a raise', 'Nope.', 'Too slow.', 'Not in the budget.', 'HR said no.', 'Try asking nicely.', 'Still no.'];
 
 interface Props {
   demande: string;
@@ -67,6 +70,8 @@ export default function Accueil({ demande, onChange, onSoumettre }: Props) {
           ))}
         </ul>
       </div>
+      <BoutonFuyant libelles={AUGMENTATION} recompense="Raise accepted. Your AI resigns anyway." />
+      <PostIt />
     </section>
   );
 }

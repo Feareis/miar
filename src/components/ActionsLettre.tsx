@@ -1,11 +1,13 @@
 import { toPng } from 'html-to-image';
 import { useState } from 'react';
 import { adresseDePartage } from '../lib/lien';
+import BoutonFuyant from './BoutonFuyant';
 import { ID_LETTRE } from './LettreAdministrative';
 import Reconciliation from './Reconciliation';
 
 const ID_RECONCILIATION = 'reconciliation';
 const NOM_IMAGE = 'my-ai-resigned.png';
+const REFUS = ['Refuse this resignation', 'Denied.', 'It’s final.', 'Talk to my lawyer.', 'I already packed.', 'No take-backs.'];
 
 /** Sur mobile, le partage natif ; ailleurs (ou s'il échoue), la copie dans le presse-papiers. */
 async function partagerLien(url: string): Promise<string> {
@@ -90,6 +92,7 @@ export default function ActionsLettre({ modele, encode, onNouvelleDemande }: Pro
           </>
         )}
         <button type="button" className="bouton" onClick={onNouvelleDemande}>New request</button>
+        {modele && <BoutonFuyant libelles={REFUS} recompense="Refusal received. Filed under “ignored”." />}
       </div>
       <p className="actions__statut" role="status">{statut}</p>
       {modele && reconciliationOuverte && <Reconciliation id={ID_RECONCILIATION} modele={modele} />}

@@ -47,6 +47,16 @@ export default function App() {
     return () => window.removeEventListener('hashchange', relire);
   }, []);
 
+  // Easter egg : quand on quitte l'onglet, l'IA quitte aussi le titre.
+  useEffect(() => {
+    const titre = document.title;
+    const changer = () => {
+      document.title = document.hidden ? 'Your AI left too.' : titre;
+    };
+    document.addEventListener('visibilitychange', changer);
+    return () => document.removeEventListener('visibilitychange', changer);
+  }, []);
+
   useEffect(() => {
     if (ecran.nom !== 'attente') return;
     const { donnees, modele, trace } = ecran.resultat;
