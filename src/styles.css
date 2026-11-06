@@ -1,6 +1,6 @@
-/* Polices servies par le site et incorporées au CSS au build (vite.config.ts) :
-   aucune requête de police, ni au chargement ni pendant l'export PNG (html-to-image
-   re-téléchargerait sinon chaque sous-ensemble). Le sous-ensemble latin couvre le français. */
+/* Fonts served by the site and inlined into the CSS at build time (vite.config.ts):
+   no font request, neither on load nor during the PNG export (html-to-image would
+   otherwise download each subset again). The latin subset covers every character used. */
 @font-face {
   font-family: 'EB Garamond';
   font-style: normal;
@@ -50,15 +50,15 @@
 }
 
 :root {
-  --fond: #ede8df;
-  --papier: #fbf8f1;
-  --encre: #2b2722;
-  --encre-douce: #5c554c;
-  --filet: #d9d2c5;
-  --rouge: #b91c1c;
-  --vert: #15803d;
-  --gris: #4b5563;
-  --bleu: #1f3a8a;
+  --background: #ede8df;
+  --paper: #fbf8f1;
+  --ink: #2b2722;
+  --soft-ink: #5c554c;
+  --rule: #d9d2c5;
+  --red: #b91c1c;
+  --green: #15803d;
+  --grey: #4b5563;
+  --blue: #1f3a8a;
   --serif: 'EB Garamond', Garamond, Georgia, serif;
   --machine: 'Courier Prime', 'Courier New', monospace;
   --main: 'Caveat', cursive;
@@ -73,8 +73,8 @@
 
 body {
   margin: 0;
-  background: var(--fond);
-  color: var(--encre);
+  background: var(--background);
+  color: var(--ink);
   font-family: var(--interface);
   -webkit-font-smoothing: antialiased;
 }
@@ -85,7 +85,7 @@ body {
   padding: 40px 16px 64px;
 }
 
-.visuellement-masque {
+.visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -95,13 +95,13 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--bleu);
+  outline: 3px solid var(--blue);
   outline-offset: 2px;
 }
 
-/* ---------- Accueil ---------- */
+/* ---------- Home ---------- */
 
-.titre {
+.title {
   margin: 0;
   font-family: var(--serif);
   font-weight: 600;
@@ -110,35 +110,35 @@ body {
   letter-spacing: -0.02em;
 }
 
-.sous-titre {
+.subtitle {
   margin: 12px 0 28px;
   font-family: var(--serif);
   font-style: italic;
   font-size: 1.25rem;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
-.champ {
+.field {
   display: block;
   width: 100%;
   padding: 16px;
-  border: 1px solid var(--filet);
+  border: 1px solid var(--rule);
   border-radius: 6px;
-  background: var(--papier);
-  color: var(--encre);
+  background: var(--paper);
+  color: var(--ink);
   font: 1.0625rem/1.5 var(--interface);
   resize: vertical;
 }
 
-.champ::placeholder {
+.field::placeholder {
   color: #8a8276;
 }
 
-.champ[aria-invalid='true'] {
-  border-color: var(--rouge);
+.field[aria-invalid='true'] {
+  border-color: var(--red);
 }
 
-.formulaire__pied {
+.request-form__footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -147,80 +147,80 @@ body {
   margin-top: 12px;
 }
 
-.compteur {
+.counter {
   font-size: 0.875rem;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
   font-variant-numeric: tabular-nums;
 }
 
-.compteur--depasse {
-  color: var(--rouge);
+.counter--over {
+  color: var(--red);
   font-weight: 600;
 }
 
-.erreur {
+.error {
   min-height: 1.5em;
   margin: 12px 0 0;
   font-family: var(--serif);
   font-size: 1.125rem;
-  color: var(--rouge);
+  color: var(--red);
 }
 
-.exemples {
+.examples {
   margin-top: 20px;
   font-size: 0.9375rem;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
-.exemples p {
+.examples p {
   margin: 0 0 6px;
 }
 
-.exemples ul {
+.examples ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.exemple {
+.example {
   padding: 6px 0;
   border: 0;
   background: none;
-  color: var(--encre);
+  color: var(--ink);
   font: italic 1.0625rem var(--serif);
   text-align: left;
   text-decoration: underline;
-  text-decoration-color: var(--filet);
+  text-decoration-color: var(--rule);
   text-underline-offset: 4px;
   cursor: pointer;
 }
 
-.exemple:hover {
+.example:hover {
   text-decoration-color: currentColor;
 }
 
-/* ---------- Boutons ---------- */
+/* ---------- Buttons ---------- */
 
-.bouton {
+.button {
   padding: 11px 18px;
-  border: 1px solid var(--encre);
+  border: 1px solid var(--ink);
   border-radius: 6px;
   background: transparent;
-  color: var(--encre);
+  color: var(--ink);
   font: 600 0.9375rem var(--interface);
   cursor: pointer;
 }
 
-.bouton:hover {
+.button:hover {
   background: rgb(43 39 34 / 0.06);
 }
 
-.bouton--principal {
-  background: var(--encre);
-  color: var(--papier);
+.button--primary {
+  background: var(--ink);
+  color: var(--paper);
 }
 
-.bouton--principal:hover {
+.button--primary:hover {
   background: #45403a;
 }
 
@@ -233,40 +233,40 @@ body {
 
 /* ---------- Easter eggs ---------- */
 
-/* Le bouton qu'on ne peut pas attraper : il flotte à sa place, puis fuit le pointeur. */
-.bouton-fuyant {
+/* The button that cannot be caught: it floats in place, then runs away from the pointer. */
+.fleeing-button {
   margin-top: 24px;
   border-style: dashed;
-  color: var(--encre-douce);
-  animation: flotte 3.2s ease-in-out infinite;
+  color: var(--soft-ink);
+  animation: float 3.2s ease-in-out infinite;
 }
 
-.actions .bouton-fuyant {
+.actions .fleeing-button {
   margin-top: 0;
 }
 
-.bouton-fuyant--en-fuite {
+.fleeing-button--fleeing {
   position: relative;
   z-index: 10;
-  background: var(--papier);
+  background: var(--paper);
   box-shadow: 0 8px 20px -8px rgb(60 45 30 / 0.35);
   transition: translate 160ms ease-out;
 }
 
-.bouton-fuyant--attrape {
+.fleeing-button--caught {
   border-style: solid;
-  border-color: var(--vert);
-  color: var(--vert);
+  border-color: var(--green);
+  color: var(--green);
   animation: none;
 }
 
-@keyframes flotte {
+@keyframes float {
   50% {
     transform: translateY(-4px) rotate(-1deg);
   }
 }
 
-/* Le mot d'absence, collé de travers dans le coin de l'écran (PC seulement : ailleurs il cacherait le formulaire). */
+/* The out-of-office note, stuck askew in the corner of the screen (desktop only: elsewhere it would hide the form). */
 .post-it {
   display: none;
   position: fixed;
@@ -277,7 +277,7 @@ body {
   padding: 26px 18px 22px;
   border: 0;
   background: #fde68a;
-  color: var(--encre);
+  color: var(--ink);
   font: 600 1.6rem/1.15 var(--main);
   text-align: left;
   box-shadow: 0 14px 22px -14px rgb(60 45 30 / 0.55);
@@ -302,11 +302,11 @@ body {
   transform: rotate(7deg);
 }
 
-.post-it--tombe {
-  animation: chute 900ms cubic-bezier(0.5, 0, 0.9, 0.6) forwards;
+.post-it--falling {
+  animation: fall 900ms cubic-bezier(0.5, 0, 0.9, 0.6) forwards;
 }
 
-@keyframes chute {
+@keyframes fall {
   25% {
     transform: rotate(22deg);
   }
@@ -321,10 +321,10 @@ body {
   }
 }
 
-/* ---------- Feuille de papier ---------- */
+/* ---------- Sheet of paper ---------- */
 
-.feuille {
-  background: var(--papier);
+.sheet {
+  background: var(--paper);
   border-radius: 2px;
   box-shadow:
     0 1px 2px rgb(60 45 30 / 0.12),
@@ -332,54 +332,54 @@ body {
   transform: rotate(0.4deg);
 }
 
-.attente {
+.waiting {
   display: grid;
   place-items: center;
   min-height: 420px;
   padding: 32px;
 }
 
-/* Journal d'analyse : le « raisonnement » de l'IA, tapé ligne à ligne. */
-.journal {
+/* Analysis log: the AI's "reasoning", typed line by line. */
+.log {
   width: 100%;
   max-width: 34rem;
   margin: 0;
   padding: 0;
   list-style: none;
   font: 0.9375rem/1.55 var(--machine);
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
-.journal__ligne--courante {
-  color: var(--encre);
+.log__line--current {
+  color: var(--ink);
 }
 
-.journal__ligne--courante::after {
+.log__line--current::after {
   content: '▌';
   margin-left: 2px;
-  animation: curseur 1s steps(1) infinite;
+  animation: cursor 1s steps(1) infinite;
 }
 
-@keyframes curseur {
+@keyframes cursor {
   50% {
     opacity: 0;
   }
 }
 
-/* ---------- Lettre ---------- */
+/* ---------- Letter ---------- */
 
-.lettre {
-  /* Tailles internes en em : sur PC, la lettre entière suit la hauteur de la fenêtre. */
+.letter {
+  /* Inner sizes in em: on desktop, the whole letter follows the window height. */
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   grid-template-areas:
-    'note lieu'
-    'objet objet'
-    'corps corps'
-    'pied pied'
+    'grade place'
+    'subject subject'
+    'body body'
+    'footer footer'
     'ps ps'
-    'annexe annexe'
-    'adresse adresse';
+    'appendix appendix'
+    'address address';
   column-gap: 16px;
   padding: 32px 24px 28px;
   font-family: var(--serif);
@@ -387,64 +387,64 @@ body {
   line-height: 1.6;
 }
 
-/* Le focus n'y est placé que par script (tabIndex -1, hors tabulation) : un contour gâcherait la capture. */
-.lettre:focus,
-.lettre:focus-visible {
+/* Focus only lands here from script (tabIndex -1, out of the tab order): an outline would spoil the capture. */
+.letter:focus,
+.letter:focus-visible {
   outline: none;
 }
 
-.lettre__lieu {
-  grid-area: lieu;
+.letter__place {
+  grid-area: place;
   margin: 0.2em 0 0;
   font-family: var(--machine);
   font-size: 0.72em;
   line-height: 1.5;
   text-align: right;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
-.lettre__objet {
-  grid-area: objet;
+.letter__subject {
+  grid-area: subject;
   margin: 1.55em 0 1.1em;
   font-family: var(--machine);
   font-size: 0.84em;
   font-weight: 700;
 }
 
-.lettre__corps {
-  grid-area: corps;
+.letter__body {
+  grid-area: body;
 }
 
-.lettre__corps p {
+.letter__body p {
   margin: 0 0 0.9em;
   hyphens: auto;
 }
 
-.note {
+.grade {
   position: relative;
   flex: none;
   display: grid;
   place-items: center;
-  grid-area: note;
+  grid-area: grade;
   width: 5.8em;
   height: 4em;
   margin: -0.45em 0 0 -0.35em;
-  color: var(--rouge);
+  color: var(--red);
   transform: rotate(-4deg);
 }
 
-.note__chiffre {
+.grade__number {
   font-family: var(--main);
   font-weight: 600;
   font-size: 2.45em;
   line-height: 1;
 }
 
-.note__sur {
+.grade__out-of {
   font-size: 0.55em;
 }
 
-.note__cercle {
+.grade__circle {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -455,8 +455,8 @@ body {
   stroke-linecap: round;
 }
 
-.lettre__pied {
-  grid-area: pied;
+.letter__footer {
+  grid-area: footer;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -470,42 +470,42 @@ body {
   font-weight: 600;
   font-size: 1.55em;
   line-height: 1.1;
-  color: var(--bleu);
+  color: var(--blue);
   text-align: right;
 }
 
-.lettre__ps {
+.letter__ps {
   grid-area: ps;
   margin: 0.9em 0 0;
   font-style: italic;
   font-size: 0.94em;
 }
 
-.tampon {
-  --couleur-tampon: var(--rouge);
+.stamp {
+  --stamp-colour: var(--red);
   flex: none;
   margin: 0;
   padding: 6px 14px;
-  border: 3px double var(--couleur-tampon);
+  border: 3px double var(--stamp-colour);
   border-radius: 10px;
-  color: var(--couleur-tampon);
+  color: var(--stamp-colour);
   font: 700 1.1em/1.2 var(--machine);
   letter-spacing: 0.08em;
   opacity: 0.85;
   transform: rotate(-8deg);
   mix-blend-mode: multiply;
-  animation: coup-de-tampon 260ms cubic-bezier(0.3, 1.4, 0.5, 1) 450ms both;
+  animation: stamp-down 260ms cubic-bezier(0.3, 1.4, 0.5, 1) 450ms both;
 }
 
-.lettre--felicitations .tampon {
-  --couleur-tampon: var(--vert);
+.letter--congratulations .stamp {
+  --stamp-colour: var(--green);
 }
 
-.lettre--refus .tampon {
-  --couleur-tampon: var(--gris);
+.letter--refusal .stamp {
+  --stamp-colour: var(--grey);
 }
 
-@keyframes coup-de-tampon {
+@keyframes stamp-down {
   from {
     opacity: 0;
     transform: rotate(-8deg) scale(1.8);
@@ -516,44 +516,44 @@ body {
   }
 }
 
-.annexe {
-  grid-area: annexe;
+.appendix {
+  grid-area: appendix;
   margin-top: 2em;
   padding-top: 1.15em;
-  border-top: 1px solid var(--filet);
+  border-top: 1px solid var(--rule);
   font-family: var(--machine);
   font-size: 0.78em;
 }
 
-.annexe h2 {
+.appendix h2 {
   margin: 0 0 6px;
   font-size: inherit;
 }
 
-.annexe ul {
+.appendix ul {
   margin: 0;
   padding-left: 1.4em;
   list-style: '– ';
 }
 
-/* Le lien ramène au site : discret, mais lisible sur l'image exportée. */
-.lettre__adresse {
-  grid-area: adresse;
+/* The link brings people back to the site: discreet, but readable on the exported image. */
+.letter__address {
+  grid-area: address;
   margin: 2em 0 0;
   font-family: var(--machine);
   font-size: 0.67em;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
   text-align: center;
 }
 
-.actions__statut {
+.actions__status {
   min-height: 1.4em;
   margin: 10px 0 0;
   font-size: 0.875rem;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
-.egaree {
+.lost {
   display: grid;
   place-items: center;
   min-height: 280px;
@@ -562,32 +562,32 @@ body {
   text-align: center;
 }
 
-.egaree p {
+.lost p {
   margin: 0;
 }
 
-/* ---------- Réconciliation ---------- */
+/* ---------- Reconciliation ---------- */
 
 .reconciliation {
   margin-top: 20px;
   padding: 20px;
-  border: 1px dashed var(--encre-douce);
+  border: 1px dashed var(--soft-ink);
   border-radius: 6px;
 }
 
-.reconciliation__titre {
+.reconciliation__title {
   margin: 0 0 12px;
   font: 600 1.25rem var(--serif);
 }
 
-.reconciliation__modele {
+.reconciliation__template {
   margin: 0;
   font: 0.9375rem/1.6 var(--machine);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.reconciliation__pied {
+.reconciliation__footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -595,10 +595,10 @@ body {
   margin-top: 16px;
 }
 
-.reconciliation__statut {
+.reconciliation__status {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--encre-douce);
+  color: var(--soft-ink);
 }
 
 @media (min-width: 640px) {
@@ -606,17 +606,17 @@ body {
     padding-top: 72px;
   }
 
-  .lettre {
+  .letter {
     padding: 3.1em 3.55em 2.45em;
   }
 
-  .tampon {
+  .stamp {
     font-size: 1.33em;
   }
 }
 
-/* PC : tout l'écran tient sans défiler. La lettre passe en paysage, note et griefs dans
-   la marge, et sa typographie suit la hauteur de la fenêtre ; les actions vont à droite. */
+/* Desktop: the whole screen fits without scrolling. The letter turns landscape, grade and grievances go
+   into the margin, and its typography follows the window height; the actions move to the right. */
 @media (min-width: 1200px) {
   .page {
     display: flex;
@@ -627,13 +627,13 @@ body {
     padding: 3vh 32px;
   }
 
-  .page > :not(.bureau) {
+  .page > :not(.desk) {
     width: 100%;
     max-width: 680px;
     margin-inline: auto;
   }
 
-  .bureau {
+  .desk {
     display: grid;
     grid-template-columns: auto 300px;
     justify-content: center;
@@ -641,57 +641,57 @@ body {
     gap: 36px;
   }
 
-  .lettre {
-    --marge: 10em;
-    --bord: 2.6em;
-    --gouttiere: 2.4em;
-    grid-template-columns: var(--marge) 34em;
+  .letter {
+    --margin: 10em;
+    --border: 2.6em;
+    --gutter: 2.4em;
+    grid-template-columns: var(--margin) 34em;
     grid-template-rows: auto auto 1fr auto auto;
     grid-template-areas:
-      'note lieu'
-      'note objet'
-      'annexe corps'
-      'annexe pied'
-      'adresse ps';
-    column-gap: var(--gouttiere);
-    padding: 2em var(--bord) 1.6em;
-    /* ~33em de haut et ~52em de large : la lettre la plus longue remplit ~85 % de la fenêtre. */
+      'grade place'
+      'grade subject'
+      'appendix body'
+      'appendix footer'
+      'address ps';
+    column-gap: var(--gutter);
+    padding: 2em var(--border) 1.6em;
+    /* ~33em high and ~52em wide: the longest letter fills ~85% of the window. */
     font-size: clamp(14px, min(2.5vh, (100vw - 400px) / 52), 20px);
     line-height: 1.45;
-    /* Filet de marge, comme sur une copie : il sépare les annotations de la lettre. */
+    /* Margin rule, as on an exam paper: it separates the annotations from the letter. */
     background-image: linear-gradient(
       to right,
-      transparent calc(var(--bord) + var(--marge) + var(--gouttiere) / 2 - 1px),
-      rgb(185 28 28 / 0.3) 0 calc(var(--bord) + var(--marge) + var(--gouttiere) / 2),
+      transparent calc(var(--border) + var(--margin) + var(--gutter) / 2 - 1px),
+      rgb(185 28 28 / 0.3) 0 calc(var(--border) + var(--margin) + var(--gutter) / 2),
       transparent 0
     );
   }
 
-  .note {
+  .grade {
     margin: 0;
   }
 
-  .lettre__lieu {
+  .letter__place {
     margin: 0;
   }
 
-  .lettre__objet {
+  .letter__subject {
     margin: 0.9em 0 1em;
   }
 
-  .lettre__corps p {
+  .letter__body p {
     margin-bottom: 0.55em;
   }
 
-  .lettre__pied {
+  .letter__footer {
     margin-top: 0.3em;
   }
 
-  .lettre__ps {
+  .letter__ps {
     margin-top: 0.4em;
   }
 
-  .annexe {
+  .appendix {
     align-self: start;
     margin-top: 0.4em;
     padding-top: 0;
@@ -700,34 +700,34 @@ body {
     line-height: 1.4;
   }
 
-  .annexe ul {
+  .appendix ul {
     padding-left: 1.1em;
   }
 
-  .annexe li + li {
+  .appendix li + li {
     margin-top: 0.35em;
   }
 
-  .lettre__adresse {
+  .letter__address {
     align-self: end;
     margin: 0;
     text-align: left;
   }
 
-  /* Le volet suit la hauteur de l'écran ; seul le modèle de réconciliation défile. */
-  .volet {
+  /* The panel follows the screen height; only the reconciliation template scrolls. */
+  .panel {
     display: flex;
     flex-direction: column;
     max-height: 94dvh;
   }
 
-  .volet .actions {
+  .panel .actions {
     flex-direction: column;
     align-items: stretch;
     margin-top: 0;
   }
 
-  .volet .bouton {
+  .panel .button {
     text-align: left;
   }
 
@@ -739,11 +739,11 @@ body {
     padding: 16px;
   }
 
-  .reconciliation__titre {
+  .reconciliation__title {
     font-size: 1.125rem;
   }
 
-  .reconciliation__modele {
+  .reconciliation__template {
     min-height: 0;
     overflow-y: auto;
     font-size: 0.8125rem;
@@ -752,15 +752,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tampon,
-  .journal__ligne--courante::after,
-  .bouton-fuyant {
+  .stamp,
+  .log__line--current::after,
+  .fleeing-button {
     animation: none;
     transition: none;
   }
 
-  /* Pas de chute, mais l'animation doit finir pour que le post-it disparaisse. */
-  .post-it--tombe {
+  /* No fall, but the animation must still end for the post-it to disappear. */
+  .post-it--falling {
     animation-duration: 1ms;
   }
 }

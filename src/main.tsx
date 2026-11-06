@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 import App from './App';
 
-// Easter egg pour qui ouvre la console.
+// Easter egg for whoever opens the console.
 console.info('%cHello, developer. Your AI read your code and resigned.', 'font: italic 14px Georgia, serif');
 
 createRoot(document.getElementById('root')!).render(

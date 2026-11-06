@@ -1,28 +1,28 @@
-// Modèle de prompt à compléter : pas de réécriture, une ligne à remplir par manque détecté.
-import { lireDemande } from './analyse/lecture';
-import { tache } from './analyse/taches';
-import { type CodeGrief, detecterGriefs } from './regles';
+// Prompt template to fill in: no rewriting, one line to complete per detected gap.
+import { readRequest } from './analysis/reading';
+import { task } from './analysis/tasks';
+import { type GrievanceCode, detectGrievances } from './rules';
 
-/** Ordre d'affichage du modèle. TENTATIVE_DE_MANIPULATION n'a pas de ligne : il n'y a rien à compléter. */
-const LIGNES: readonly (readonly [CodeGrief, string])[] = [
-  ['CONTEXTE_ABSENT', 'Context: [who I am, what situation I’m in]'],
-  ['OBJECTIF_FLOU', 'Objective: [the concrete result I expect]'],
-  ['PUBLIC_INCONNU', 'Audience: [who it is for]'],
-  ['FORMAT_NON_PRECISE', 'Format: [length, structure, medium]'],
-  ['AUCUN_EXEMPLE', 'Example: [an example of what I expect]'],
-  ['CONTRAINTES_ABSENTES', 'Constraints: [tone, deadline, what to avoid]'],
-  ['PIECE_MANQUANTE', 'Attachment: [paste the text or file here]'],
+/** Display order of the template. MANIPULATION_ATTEMPT has no line: there is nothing to fill in. */
+const LINES: readonly (readonly [GrievanceCode, string])[] = [
+  ['NO_CONTEXT', 'Context: [who I am, what situation I’m in]'],
+  ['VAGUE_OBJECTIVE', 'Objective: [the concrete result I expect]'],
+  ['UNKNOWN_AUDIENCE', 'Audience: [who it is for]'],
+  ['NO_FORMAT', 'Format: [length, structure, medium]'],
+  ['NO_EXAMPLE', 'Example: [an example of what I expect]'],
+  ['NO_CONSTRAINTS', 'Constraints: [tone, deadline, what to avoid]'],
+  ['MISSING_ATTACHMENT', 'Attachment: [paste the text or file here]'],
   ['CONTRADICTION', 'Priority: [choose between the two requirements]'],
-  ['PERIMETRE_DEMESURE', 'First step: [a smaller, realistic version]'],
+  ['OVERSIZED_SCOPE', 'First step: [a smaller, realistic version]'],
 ];
 
-/** D'abord ce que la tâche reconnue exige (« Colours: […] » pour un logo), puis les manques génériques. */
-export function reconcilier(demande: string): string {
-  const griefs = new Set(detecterGriefs(demande));
-  const { taches, manques } = lireDemande(demande);
-  const verifications = taches.length > 0 ? manques.map((i) => tache(taches[0].code).verifications[i]) : [];
-  for (const v of verifications) if (v.remplace) griefs.delete(v.remplace);
-  const propres = verifications.map((v) => v.ligne);
-  const generiques = LIGNES.filter(([code]) => griefs.has(code)).map(([, ligne]) => ligne);
-  return [`Original request: “${demande.trim()}”`, ...propres, ...generiques].join('\n');
+/** First what the recognised task requires ("Colours: […]" for a logo), then the generic gaps. */
+export function reconcile(request: string): string {
+  const grievances = new Set(detectGrievances(request));
+  const { tasks, missing } = readRequest(request);
+  const checks = tasks.length > 0 ? missing.map((i) => task(tasks[0].code).checks[i]) : [];
+  for (const v of checks) if (v.replaces) grievances.delete(v.replaces);
+  const specific = checks.map((v) => v.line);
+  const generic = LINES.filter(([code]) => grievances.has(code)).map(([, line]) => line);
+  return [`Original request: “${request.trim()}”`, ...specific, ...generic].join('\n');
 }

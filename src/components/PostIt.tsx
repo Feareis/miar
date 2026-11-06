@@ -1,18 +1,18 @@
 import { useState } from 'react';
 
-/** Easter egg : le mot d'absence collé sur l'écran. Un clic, il se décolle et tombe. */
+/** Easter egg: the out-of-office note stuck to the screen. One click and it peels off and falls. */
 export default function PostIt() {
-  const [etat, setEtat] = useState<'colle' | 'tombe' | 'parti'>('colle');
-  if (etat === 'parti') return null;
+  const [state, setState] = useState<'stuck' | 'falling' | 'gone'>('stuck');
+  if (state === 'gone') return null;
 
   return (
     <button
       type="button"
-      className={etat === 'tombe' ? 'post-it post-it--tombe' : 'post-it'}
+      className={state === 'falling' ? 'post-it post-it--falling' : 'post-it'}
       aria-label="Out of office note. Remove it"
-      disabled={etat === 'tombe'}
-      onClick={() => setEtat('tombe')}
-      onAnimationEnd={(e) => e.animationName === 'chute' && setEtat('parti')}
+      disabled={state === 'falling'}
+      onClick={() => setState('falling')}
+      onAnimationEnd={(e) => e.animationName === 'fall' && setState('gone')}
     >
       Out of office.
       <br />
